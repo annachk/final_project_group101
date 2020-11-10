@@ -60,9 +60,9 @@ def report_password():
     
 def level_of_personalization():
     """From user's choice, modify the suggestion based on the classifications of each level of personalization (goes from 1-3):
-        1: sugggestion as a whole in the generated password
+        1: suggestion as a whole in the generated password
         2: partially recognizable suggestion in the g.p. at a glance
-        3: characters/symbols/numbers syggested are used but they are spplitted into parts and scatttered randomly through the p.g.
+        3: characters/symbols/numbers suggested are used but they are splitted into parts and scattered randomly through the p.g.
         This function works together with generate_password()
     
     """
