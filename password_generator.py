@@ -66,6 +66,11 @@ def level_of_personalization():
         This function works together with generate_password()
     
     """
+    
+def password_manager():
+    """Asks the user if they would like to input their newly generated passwords into a text document to keep track of them.
+    The user will be able to input the account type, username/email, and generate a password to store on each line in the text file.
+    The user can elect to not use the password manager after they create their passwords."""
 
 filename = "100000_regularly_used_passwords_breached.txt"
 suggestion = ""
