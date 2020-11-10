@@ -4,9 +4,12 @@
 import re
 
 class Generator:
+    """ Used for generating passwords with varying levels of security requirements."""
+    
     def __init__(self):
         """ Initializes Generator's attributes
         """
+        
         self.filename = "100000_regularly_used_passwords_breached.txt"
         
     def get_passwords(self):
@@ -49,7 +52,7 @@ class Generator:
         else:
             print("Your suggestion passed. It will be used when generating your password")
 
-    def generate_password():
+    def generate_password(self,): #passed something from level_of_personalization
         """Generate a random password based on the user’s suggestion or if the suggestion was not approved, 
         a randomized password will be generated that agrees with the password requirements.
         
@@ -60,26 +63,32 @@ class Generator:
         """Report to the user that his/her suggestion was not approved and why;
         allows the input of a new suggestion or generate a randomized password
         
+        Returns(str): Tells user if the password was not approved, why, and asks to try again.
+        
         """
         
 
     def report_password():
         """Report to the user what the password is
         
+        Returns(str): the password generated back to the user
         """
         
         
     def level_of_personalization():
         """From user's choice, modify the suggestion based on the classifications of each level of personalization (goes from 1-3):
             1: suggestion as a whole in the generated password
-            2: partially recognizable suggestion in the g.p. at a glance
-            3: characters/symbols/numbers suggested are used but they are split into parts and scatttered randomly through the p.g.
+            2: partially recognizable suggestion in the generated password at a glance
+            3: characters/symbols/numbers suggested are used but they are split into parts and scattered randomly through the p.g.
             This function works together with generate_password()
-        
         """
-
+        # Fastest "Give-me a stanard password Now" option: [???]
+        # General Social Media Password Requirements: [10+ character length, at least 2 special characters, at least 2 numbers, at least 2 lowercase, at least 2 uppercase]
+        # Government-level password requirements (aka Strongest Security): [20+ characters, numbers <= 5, special <= 5, uppercase <= 5, lowercase <= 5, no sequentials]
         
-class Manager:        
+        
+class Manager: 
+    """Used for storing the generated password into a file for book keeping. """"
     def password_manager():
         """Asks the user if they would like to input their newly generated passwords into a text document to keep track of them.
         The user will be able to input the account type, username/email, and generate a password to store on each line in the text file.
@@ -97,6 +106,3 @@ def main():
     #gen = Generator()
     #suggestion = ""
     #gen.evaluate_suggestion(suggestion)
-
-
-
