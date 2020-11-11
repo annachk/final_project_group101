@@ -4,6 +4,9 @@
 import re
 
 class Generator:
+    """Get user's suggestion of what to put in the password, compare the suggestion with regularly used passwords and either reject it or accept it;
+        Generate password based on suggestion and level of personalization desired
+    """
     def __init__(self):
         """ Initializes Generator's attributes
         """
@@ -73,7 +76,10 @@ class Generator:
         
         """
 
-class Manager:        
+class Manager:
+    """Allows user to save his/her usernames/emails and their respective passwords;
+        If asked, returns the previously generated passwords
+    """        
     def password_manager():
         """Asks the user if they would like to input their newly generated passwords into a text document to keep track of them.
         The user will be able to input the account type, username/email, and generate a password to store on each line in the text file.
