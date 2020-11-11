@@ -75,6 +75,11 @@ class Generator:
             This function works together with generate_password()
         
         """
+    
+    def reset_password():
+        """Allows user to reset existing passwords;
+        Returns the newly generated password, if the user decides to reset their password.
+        """
 
 class Manager:
     """Allows user to save his/her usernames/emails and their respective passwords;
@@ -96,12 +101,7 @@ def main():
     #suggestion = ""
     #gen.evaluate_suggestion(suggestion)
     
-def reset_password():
-    """Reports to the user that they entered the password wrong too many times (for example 3 times), then asks them to retry in a few minutes or if they want to 
-    change to a new password.
-    Allows user to reset their password
-    Returns the newly generated password, if the user decides to reset their password.
-    """
+
     
 
 
