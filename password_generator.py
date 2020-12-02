@@ -139,6 +139,8 @@ class Generator:
                 return new_password
             else:
                 print(f"Sorry, the password is incorrect. Please try again.")
+        else:
+            break
                 
         
         
