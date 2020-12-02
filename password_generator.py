@@ -118,10 +118,11 @@ class Generator:
         """        
         
     def reset_password(password):
-        """Allows user to reset existing passwords;
+        """Allows user to reset existing password if the password is entered incorrectly more than 3 times;
+        
         Returns the newly generated password, if the user decides to reset their password.
         """
-        correct_password = generate_password()
+        correct_password = generate_password() #should call the generated password from other function
         attempts = 0
         while attempts < 4:
             if password == correct_password:
@@ -134,7 +135,7 @@ class Generator:
             print("Reset your password?")
             answer = input("Please enter Yes or No")
             if answer == "Yes":
-                new_password = generate_password()
+                new_password = generate_password() #should generate a new password
                 return new_password
             else:
                 print(f"Sorry, the password is incorrect. Please try again.")
