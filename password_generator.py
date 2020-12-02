@@ -17,6 +17,7 @@ class Generator:
         # all_too_similar stores parts of regularly used passwords breached to access sensitive information
         self.all_too_similar = []
         self.get_passwords()
+        self.suggestion = ''
         
     def get_passwords(self):
         ''' Read content from file and put it into two lists, 
@@ -49,14 +50,21 @@ class Generator:
         #all_same = self.get_passwords()
         #all_too_similar = self.get_passwords()
         #self.get_passwords()
+        self.suggestion = suggestion
         
-        if suggestion in self.all_same:
+        if self.suggestion in self.all_same:
             print("Exact password found in the regularly used password file")
-        if suggestion in self.all_too_similar:
+        if self.suggestion in self.all_too_similar:
             print("This is part of a regularly used password")
         else:
             #print(self.all_same)
-            print("Your suggestion passed. It will be used when generating your password")
+            requirements = self.password_requirements()
+            print(requirements, len(requirements))
+            if requirements['1'] < (len(self.suggestion) + len(requirements) - 1):
+                print("A greater length is necessary to fulfill all requirements while including your suggestion.")
+            else:
+                print("Your suggestion passed. It will be used when generating your password")
+                return 'pass' # means that the suggestion should be used in the generate_password function
 
     def password_requirements(self):
         """ Get password requirements, defined by the service provider, from user's input
@@ -65,7 +73,7 @@ class Generator:
             requirements (dict): the requirements necessary for the password as keys and details as values
         """
         
-        requirements = {}
+        requirements = {'1':len(self.suggestion)}
         print('\n------ REQUIREMENTS ------\n'
                 '1 - Password length\n'
                 '2 - Include numbers\n'
@@ -73,12 +81,12 @@ class Generator:
                 '4 - Include mix of letters, numbers, and symbols\n'
                 '5 - Done\n')
         while True:
-            pass_req_query = input('Enter the number of the requirement(s) necessary'
-                                   'for your password found above (one by one):')
+            pass_req_query = input('Enter the number of the requirement(s) necessary '
+                                   'for your password found above (one by one) that is not fulfilled by your suggestion: ')
             if pass_req_query == '5':
                 break
             elif pass_req_query == '1':
-                length = int(input('Enter the number of characters for password: '))
+                length = int(input('Enter the full amount of characters for the password: '))
                 requirements[pass_req_query] = length
             elif pass_req_query in ['2','3','4']:
                 requirements[pass_req_query] = ''
@@ -105,15 +113,7 @@ class Generator:
             a totally randomized password that agrees with the password requirements
             This function works together with level_of_personalization() and password_requirements()
         
-        """
-        
-    def report_unaccepted_suggestion():
-        """ Report to the user that his/her suggestion was not approved and why; 
-            has options to either input another suggestion or get a totally randomized password
-            
-            Returns (str): Informs the user if their suggested password is approved. If denied, a reason for denial is given.
-        """
-        
+        """        
         
     def reset_password():
         """Allows user to reset existing passwords;
@@ -139,9 +139,9 @@ def main():
         Allows user to save his/her usernames/emails and their respective passwords;
         Returns the generated password and, if asked, the previously generated passwords
     """
-    #gen = Generator()
-    #suggestion = "Anna"
-    #gen.evaluate_suggestion(suggestion)
+    gen = Generator()
+    suggestion = "l0ve"
+    gen.evaluate_suggestion(suggestion)
     
 
 main()    
