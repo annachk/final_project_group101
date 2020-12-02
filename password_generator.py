@@ -1,6 +1,8 @@
 # Source for the list of passwords: https://www.ncsc.gov.uk/news/most-hacked-passwords-revealed-as-uk-cyber-survey-exposes-gaps-in-online-security
 
 import re
+import random
+import string
 
 class Generator:
     """ Get user's suggestion of what to put in the password, 
