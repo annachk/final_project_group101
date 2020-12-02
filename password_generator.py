@@ -129,7 +129,7 @@ class Generator:
                 break
             else:
                 print(f"Sorry, the password is incorrect. Please try again.")
-                count += 1
+                attempts += 1
                 
         if attempts >= 5:
             print("Reset your password?")
