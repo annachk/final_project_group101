@@ -67,18 +67,19 @@ class Generator:
         
         requirements = {}
         print('\n------ REQUIREMENTS ------\n'
-                '1 - Minimum password character length\n'
+                '1 - Password length\n'
                 '2 - Include numbers\n'
                 '3 - Include lowercase and uppercase letters\n'
                 '4 - Include mix of letters, numbers, and symbols\n'
                 '5 - Done\n')
         while True:
-            pass_req_query = input('Enter the number of the requirement(s) necessary for your password found above (one by one):')
+            pass_req_query = input('Enter the number of the requirement(s) necessary'
+                                   'for your password found above (one by one):')
             if pass_req_query == '5':
                 break
             elif pass_req_query == '1':
-                min_length = int(input('Enter minimum amount of characters for password: '))
-                requirements[pass_req_query] = min_length
+                length = int(input('Enter the number of characters for password: '))
+                requirements[pass_req_query] = length
             elif pass_req_query in ['2','3','4']:
                 requirements[pass_req_query] = ''
             else:
