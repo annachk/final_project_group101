@@ -117,10 +117,30 @@ class Generator:
         
         """        
         
-    def reset_password():
+    def reset_password(password):
         """Allows user to reset existing passwords;
         Returns the newly generated password, if the user decides to reset their password.
         """
+        correct_password = generate_password()
+        attempts = 0
+        while attempts < 4:
+            if password == correct_password:
+                break
+            else:
+                print(f"Sorry, the password is incorrect. Please try again.")
+                count += 1
+                
+        if attempts >= 5:
+            print("Reset your password?")
+            answer = input("Please enter Yes or No")
+            if answer == "Yes":
+                new_password = generate_password()
+                return new_password
+            else:
+                print(f"Sorry, the password is incorrect. Please try again.")
+                
+        
+        
 
 class Manager:
     """Allows user to save his/her usernames/emails and their respective passwords;
