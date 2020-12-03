@@ -155,6 +155,17 @@ class Manager:
             The user will be able to input the account type, username/email, 
             and generate a password to store on each line in the text file.
             The user can elect to not use the password manager after they create their passwords."""
+        print("Would you like to store your username and password in a password manager? Type Y for yes or N for no:")
+        response = input()
+        if response == "Y":
+            f = open("pwdmanager.txt","w+")
+                #for line in f:
+                    #f.write(f"{Account} - {username} : {password})
+                    #f.close()
+        elif response != "Y" or "N":
+            print("Please enter a value of Y or N:")
+        elif response == "N":
+            continue
 
 
 def main():
