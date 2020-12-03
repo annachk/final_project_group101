@@ -97,25 +97,65 @@ class Generator:
                 continue
         return requirements
     
-    def level_of_personalization():
+    def level_of_personalization(self):
         """ From the user's choices, modify the suggestion based on the classifications 
-            of each level of personalization (goes from 1-3):
-                1: sugggestion as a whole in the generated password
-                2: partially recognizable suggestion in the g.p. at a glance
-                3: characters/symbols/numbers syggested are used but 
-                they are spplitted into parts and scatttered randomly through the p.g.
+            of each level of personalization (1-3):
+                1: User's suggestion remains unbroken within the password.
+                2: User's suggestion is broken apart within the password.
+                3: User's suggestion is broken apart and scattered randomly throughout the password.
             This function works together with generate_password()
         """
         
+        lop = input('Select level of security for Password Suggestion (1-3), with 1 being least secure and 3 being most secure')
+        
+        if lop == 2:
+            #slice user's suggestion into a pieces, stores into a list
+            lop2_list = list(suggestion)
+            return lop2_list
+        elif lop == 3:
+            #slice user's suggestion into pieces, stores into a list and randomizes the list
+            lop3_list = list(suggestion)
+            lop3_list = random.shuffle(lop3_list)
+            return lop3_list
         
         
-    def generate_password():
+        
+    def generate_password(self):
         """ Generate a random password based on the user’s suggestion and password requirements defined by the user
             or, if the suggestion was not approved, 
             a totally randomized password that agrees with the password requirements
-            This function works together with level_of_personalization() and password_requirements()
+            This function works together with level_of_personalization() and password_requirements().
+        """
+        alphabet = string.ascii_lowercase + string.ascii_uppercase
+        pw_length = length - len(suggestion)  #pw_length
         
-        """        
+        random_nums = ''.join(["{}".format(random.randint(0, 9)) for num in range(0, pw_length)])
+        random_chars = ''.join(random.choice(alphabet) for char in range(pw_length))
+        insert_range = random.randint(1, pw_length) #insert_range
+        
+        if user_suggestion_status == "Approved":
+            if 2 in requirements:
+                num_list = list(random_nums) #convert the randomly generatred numbers into a list.
+                num_list.insert(insert_range, suggestion) #adds User's Suggestion into the list at a random index.
+                pw = ''.join(str(i) for i in num_list) #convert this list to a string with no spaces. This is the password.
+                return pw
+                
+            if 3 in requirements:
+                pw1 = random_chars1.append(lop2_list)
+                random.shuffle(pw1)
+                #print(random_chars)
+                #print(random_chars_list)
+                #print("password:")
+                #print(pw1)
+                return pw1
+
+            if 4 in requirements:
+                #Include mix of letters, numbers, and symbols to user's suggestion.
+                
+                
+        if user_suggestion_status == "Denied":
+            break        
+        
         
     def reset_password(password):
         """Allows user to reset existing password if the password is entered incorrectly more than 3 times;
