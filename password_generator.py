@@ -20,6 +20,7 @@ class Generator:
         self.all_too_similar = []
         self.get_passwords()
         self.suggestion = ''
+        self.user_suggestion_status = 'Denied'
         
     def get_passwords(self):
         ''' Read content from file and put it into two lists, 
@@ -66,7 +67,7 @@ class Generator:
                 print("A greater length is necessary to fulfill all requirements while including your suggestion.")
             else:
                 print("Your suggestion passed. It will be used when generating your password")
-                return 'pass' # means that the suggestion should be used in the generate_password function
+                self.user_suggestion_status = 'Approved' # means that the suggestion should be used in the generate_password function
 
     def password_requirements(self):
         """ Get password requirements, defined by the service provider, from user's input
@@ -110,12 +111,12 @@ class Generator:
         
         if lop == 2:
             #slice user's suggestion into a pieces, stores into a list
-            lop2_list = list(suggestion)
+            lop2_list = list(self.suggestion)
             return lop2_list
         elif lop == 3:
             #slice user's suggestion into pieces, stores into a list and randomizes the list
-            lop3_list = list(suggestion)
-            lop3_list = random.shuffle(lop3_list)
+            lop3_list = list(self.suggestion)
+            random.shuffle(lop3_list)
             return lop3_list
         
         
@@ -126,17 +127,19 @@ class Generator:
             a totally randomized password that agrees with the password requirements
             This function works together with level_of_personalization() and password_requirements().
         """
+        requirements = self.password_requirements()
+        
         alphabet = string.ascii_lowercase + string.ascii_uppercase
-        pw_length = length - len(suggestion)  #pw_length
+        pw_length = requirements[1] - len(self.suggestion)  #pw_length
         
         random_nums = ''.join(["{}".format(random.randint(0, 9)) for num in range(0, pw_length)])
         random_chars = ''.join(random.choice(alphabet) for char in range(pw_length))
         insert_range = random.randint(1, pw_length) #insert_range
         
-        if user_suggestion_status == "Approved":
+        if self.user_suggestion_status == "Approved":
             if 2 in requirements:
                 num_list = list(random_nums) #convert the randomly generatred numbers into a list.
-                num_list.insert(insert_range, suggestion) #adds User's Suggestion into the list at a random index.
+                num_list.insert(insert_range, self.suggestion) #adds User's Suggestion into the list at a random index.
                 pw = ''.join(str(i) for i in num_list) #convert this list to a string with no spaces. This is the password.
                 return pw
                 
@@ -151,9 +154,9 @@ class Generator:
 
             if 4 in requirements:
                 #Include mix of letters, numbers, and symbols to user's suggestion.
+                pass # this is temporary while there is no code
                 
-                
-        if user_suggestion_status == "Denied":
+        elif self.user_suggestion_status == "Denied":
             break        
         
         
@@ -218,6 +221,7 @@ def main():
     gen = Generator()
     suggestion = "l0ve"
     gen.evaluate_suggestion(suggestion)
+    print(gen.generate_password())
     
 
 main()    
