@@ -157,36 +157,8 @@ class Generator:
                 pass # this is temporary while there is no code
                 
         elif self.user_suggestion_status == "Denied":
-            pass        
-        
-        
-    def reset_password(password):
-        """Allows user to reset existing password if the password is entered incorrectly more than 3 times;
-        
-        Returns the newly generated password, if the user decides to reset their password.
-        """
-        correct_password = generate_password() #should call the generated password from other function
-        attempts = 0
-        while attempts < 4:
-            if password == correct_password:
-                break
-            else:
-                print(f"Sorry, the password is incorrect. Please try again.")
-                attempts += 1
-                
-        if attempts >= 5:
-            print("Reset your password?")
-            answer = input("Please enter Yes or No")
-            if answer == "Yes":
-                new_password = generate_password() #should generate a new password
-                return new_password
-            else:
-                print(f"Sorry, the password is incorrect. Please try again.")
-        else:
-            break
-                
-        
-        
+            pass      
+                        
 
 class Manager:
     """Allows user to save his/her usernames/emails and their respective passwords;
@@ -209,6 +181,31 @@ class Manager:
             print("Please enter a value of Y or N:")
         elif response == "N":
             pass
+    
+    def reset_password(password):
+        """Allows user to reset existing password if the password is entered incorrectly more than 3 times in the login page;
+        
+        Returns the newly generated password, if the user decides to reset their password.
+        """
+        with open('pwdmanager.txt', 'r') as f:
+            correct_password = f.readline() #reads the first line of text file, which should include password
+
+        attempts = 0
+        while attempts < 4:
+            if password == correct_password:
+                break
+            else:
+                print(f"Sorry, the password is incorrect. Please try again.")
+                attempts += 1
+                
+        if attempts >= 5:
+            print("Reset your password?")
+            answer = input("Please enter Yes or No")
+            if answer == "Yes":
+                new_password = generate_password() #should generate a new password
+                return new_password
+            else:
+                print(f"Sorry, the password is incorrect. Please try again.")
 
 
 def main():
