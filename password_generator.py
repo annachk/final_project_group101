@@ -21,6 +21,7 @@ class Generator:
         self.get_passwords()
         self.suggestion = ''
         self.user_suggestion_status = 'Denied'
+        self.requirements = {}
         
     def get_passwords(self):
         ''' Read content from file and put it into two lists, 
@@ -49,25 +50,19 @@ class Generator:
             filename(str): path to a file to be read in
             suggestion(str): user's suggestion of what to include in the generated password
         '''
-        
-        #all_same = self.get_passwords()
-        #all_too_similar = self.get_passwords()
-        #self.get_passwords()
         self.suggestion = suggestion
+        self.requirements = self.password_requirements()
         
         if self.suggestion in self.all_same:
             print("Exact password found in the regularly used password file")
         if self.suggestion in self.all_too_similar:
             print("This is part of a regularly used password")
         else:
-            #print(self.all_same)
-            requirements = self.password_requirements()
-            print(requirements, len(requirements))
-            if requirements['1'] < (len(self.suggestion) + len(requirements) - 1):
+            if self.requirements['1'] < (len(self.suggestion) + len(self.requirements) - 1):
                 print("A greater length is necessary to fulfill all requirements while including your suggestion.")
             else:
-                print("Your suggestion passed. It will be used when generating your password")
                 self.user_suggestion_status = 'Approved' # means that the suggestion should be used in the generate_password function
+                print("Your suggestion passed. It will be used when generating your password")
 
     def password_requirements(self):
         """ Get password requirements, defined by the service provider, from user's input
