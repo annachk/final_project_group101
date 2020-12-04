@@ -157,7 +157,7 @@ class Generator:
                 pass # this is temporary while there is no code
                 
         elif self.user_suggestion_status == "Denied":
-            break        
+            pass        
         
         
     def reset_password(password):
@@ -201,14 +201,14 @@ class Manager:
         print("Would you like to store your username and password in a password manager? Type Y for yes or N for no:")
         response = input()
         if response == "Y":
-            f = open("pwdmanager.txt","w+")
+            f = open("pwdmanager.txt","a")
                 #for line in f:
                     #f.write(f"{Account} - {username} : {password})
                     #f.close()
         elif response != "Y" or "N":
             print("Please enter a value of Y or N:")
         elif response == "N":
-            continue
+            pass
 
 
 def main():
