@@ -211,7 +211,8 @@ def main():
         Returns the generated password and, if asked, the previously generated passwords
     """
     gen = Generator()
-    suggestion = "annak" # alternative: try "l0ve"
+    suggestion = "password" 
+    # "password" is not an acceptable suggestion to be in the pasword. Alternative: try "l0ve"
     gen.evaluate_suggestion(suggestion) # By Anna K: tests __init__, get_passwords, evaluate_suggestion, password_requirements
     
 
