@@ -3,20 +3,24 @@
 import re
 import random
 import string
+import sys
+from argparse import ArgumentParser
 
 class Generator:
     """ Get user's suggestion of what to put in the password, 
-        compare the suggestion with regularly used passwords and either reject it or accept it;
-        Generate password based on suggestion and level of personalization desired by the user.
+        compare the suggestion with regularly used passwords 
+        and either reject it or accept it;
+        Generate password based on suggestion and level of 
+        personalization desired by the user.
     """
     
     def __init__(self):
         """ Initializes Generator's attributes"""
         
         self.filename = "100000_regularly_used_passwords_breached.txt"
-        # all_same stores whole regularly used passwords breached to access sensitive information 
+        # all_same stores whole regularly used passwords breached 
         self.all_same = []
-        # all_too_similar stores parts of regularly used passwords breached to access sensitive information
+        # all_too_similar stores parts of regularly used passwords breached
         self.all_too_similar = []
         self.get_passwords()
         self.suggestion = ''
@@ -40,7 +44,8 @@ class Generator:
             self.all_too_similar = [part for too_similar_words in re.findall(too_similar, content) 
                                     for part in too_similar_words if len(too_similar_words) > 0 and part != '']    
             
-            
+        return self.all_same,self.all_too_similar
+        
     def evaluate_suggestion(self, suggestion):
         ''' Compare the suggestion provided by the user with the contents in each list created 
             in the get_passwords function and evaluate if it passes or not 
@@ -61,9 +66,11 @@ class Generator:
             if self.requirements['1'] < (len(self.suggestion) + len(self.requirements) - 1):
                 print("A greater length is necessary to fulfill all requirements while including your suggestion.")
             else:
-                self.user_suggestion_status = 'Approved' # means that the suggestion should be used in the generate_password function
+                self.user_suggestion_status = 'Approved' # suggestion should be used
                 print("Your suggestion passed. It will be used when generating your password")
-
+                return 'Approved'
+        return 'Denied'
+            
     def password_requirements(self):
         """ Get password requirements, defined by the service provider, from user's input
         
@@ -98,29 +105,34 @@ class Generator:
             of each level of personalization (1-3):
                 1: User's suggestion remains unbroken within the password.
                 2: User's suggestion is broken apart within the password.
-                3: User's suggestion is broken apart and scattered randomly throughout the password.
+                3: User's suggestion is broken apart
+                    and scattered randomly throughout the password.
             This function works together with generate_password()
         """
         
-        lop = input('Select level of security for Password Suggestion (1-3), with 1 being least secure and 3 being most secure')
+        lop = input('Select level of security for Password Suggestion (1-3), \
+            with 1 being least secure and 3 being most secure')
         
         if lop == 2:
             #slice user's suggestion into a pieces, stores into a list
             lop2_list = list(self.suggestion)
             return lop2_list
         elif lop == 3:
-            #slice user's suggestion into pieces, stores into a list and randomizes the list
+            # slice suggestion into pieces, stores into a list
             lop3_list = list(self.suggestion)
+            # randomizes the list
             random.shuffle(lop3_list)
             return lop3_list
         
         
         
     def generate_password(self):
-        """ Generate a random password based on the user’s suggestion and password requirements defined by the user
+        """ Generate a random password based on the user’s suggestion and 
+            password requirements defined by the user
             or, if the suggestion was not approved, 
             a totally randomized password that agrees with the password requirements
-            This function works together with level_of_personalization() and password_requirements().
+            This function works together with level_of_personalization()
+            and password_requirements().
         """
         requirements = self.password_requirements()
         
@@ -133,9 +145,12 @@ class Generator:
         
         if self.user_suggestion_status == "Approved":
             if 2 in requirements:
-                num_list = list(random_nums) #convert the randomly generatred numbers into a list.
-                num_list.insert(insert_range, self.suggestion) #adds User's Suggestion into the list at a random index.
-                pw = ''.join(str(i) for i in num_list) #convert this list to a string with no spaces. This is the password.
+                #convert the randomly generatred numbers into a list.
+                num_list = list(random_nums) 
+                #adds User's Suggestion into the list at a random index.
+                num_list.insert(insert_range, self.suggestion) 
+                #convert this list to a string with no spaces. This is the password.
+                pw = ''.join(str(i) for i in num_list) 
                 return pw
                 
             if 3 in requirements:
@@ -160,12 +175,15 @@ class Manager:
         If asked, returns the previously generated passwords
     """        
     def password_manager():
-        """ Asks the user if they would like to input their newly generated passwords 
-            into a text document to keep track of them.
+        """ Asks the user if they would like to input their newly 
+            generated passwords into a text document to keep track of them.
             The user will be able to input the account type, username/email, 
             and generate a password to store on each line in the text file.
-            The user can elect to not use the password manager after they create their passwords."""
-        print("Would you like to store your username and password in a password manager? Type Y for yes or N for no:")
+            The user can elect to not use the password manager after they 
+            create their passwords.
+        """
+        print("Would you like to store your username and password in a password manager?\
+            Type Y for yes or N for no:")
         response = input()
         if response == "Y":
             f = open("pwdmanager.txt","a")
@@ -178,12 +196,15 @@ class Manager:
             pass
     
     def reset_password(password):
-        """Allows user to reset existing password if the password is entered incorrectly more than 3 times in the login page;
+        """ Allows user to reset existing password if the password 
+            is entered incorrectly more than 3 times in the login page;
         
-        Returns the newly generated password, if the user decides to reset their password.
+        Returns:
+            the newly generated password, if the user decides to reset their password
         """
         with open('pwdmanager.txt', 'r') as f:
-            correct_password = f.readline() #reads the first line of text file, which should include password
+            #reads the first line of text file, which should include password
+            correct_password = f.readline() 
 
         attempts = 0
         while attempts < 4:
@@ -203,17 +224,29 @@ class Manager:
                 print(f"Sorry, the password is incorrect. Please try again.")
 
 
-def main():
-    """ Get user's suggestion of what to put in the password, 
-        compare the suggestion with regularly used passwords and either reject it or accept it;
+def main(suggestion):
+    """ Get user's suggestion of what to put in the password, compare the suggestion 
+        with regularly used passwords and either reject it or accept it;
         Generate password based on suggestion and level of personalization desired;
         Allows user to save his/her usernames/emails and their respective passwords;
         Returns the generated password and, if asked, the previously generated passwords
+    Args:
+        suggestion(str): user's suggestion of what to include in the generated password 
     """
     gen = Generator()
     suggestion = "password" 
-    # "password" is not an acceptable suggestion to be in the pasword. Alternative: try "l0ve"
-    gen.evaluate_suggestion(suggestion) # By Anna K: tests __init__, get_passwords, evaluate_suggestion, password_requirements
-    
+    # "password" is not an acceptable suggestion to be in the pasword. Try "l0ve"
+    gen.evaluate_suggestion(suggestion) 
+    # ^ tests __init__, get_passwords, evaluate_suggestion, password_requirements
 
-main()    
+def parse_args(arglist):
+    """ Parse command-line arguments. """
+    parser = ArgumentParser(arglist)
+    parser.add_argument("suggestion", help="suggestion of a sequence of characters\
+        to be used in the password")
+    return parser.parse_args(arglist)
+
+
+if __name__ == "__main__":
+    args = parse_args(sys.argv[1:])
+    main(args.suggestion) 
