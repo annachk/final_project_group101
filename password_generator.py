@@ -34,6 +34,10 @@ class Generator:
         
         Args:
             filename(str): the path to a file to be read in
+        
+        Side effects:
+            changes the variable "all_same"
+            changes the variable "all_too_similar"
         '''
         
         with open(filename, "r", encoding = "utf-8") as f:
@@ -59,6 +63,11 @@ class Generator:
         Args:
             suggestion(str): user's suggestion of what to include in 
             the generated password
+            
+        Side effects:
+            changes the variable "suggestion"
+            changes the variable "requirements"
+            changes the variable "user_suggestion_status"
         '''
         self.suggestion = suggestion
         
