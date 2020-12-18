@@ -53,6 +53,9 @@ def test_get_passwords():
         except:
             pass
         
+    def test_password_manager():
+        '''Test the password_manager function.'''
+        
 
         
         

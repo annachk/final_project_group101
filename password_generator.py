@@ -195,24 +195,21 @@ class Generator:
                             
     def password_manager():
         """ Asks the user if they would like to input their newly 
-            generated passwords into a text document to keep track of them.
-            The user will be able to input the account type, username/email, 
-            and generate a password to store on each line in the text file.
+            generated password into a text document to keep track of them.
+            The user will be able to input the account type, account username/email, 
+            and generated password to store on each line in the text file.
             The user can elect to not use the password manager after they 
             create their passwords.
         """
-        print("Would you like to store your username and password in a\
-            password manager? Type Y for yes or N for no:")
-        response = input()
+        response = input("Would you like to store your username and password in a password manager? Type Y for yes or N for no: ")
         if response == "Y":
-            f = open("pwdmanager.txt","a")
-                #for line in f:
-                    #f.write(f"{Account} - {username} : {password})
-                    #f.close()
-        elif response != "Y" or "N":
-            print("Please enter a value of Y or N:")
-        elif response == "N":
-            pass
+            with open("pwdmanager.txt","a+") as pwdmanager:
+                account = input("Please enter the account name (ie. Google, Apple, Netflix, etc: ")
+                username = input("Please enter the username/email address for the account: ")
+                pwdmanager.write(f"{account} {username} {pw}")
+                pwdmanager.close()
+        elif response != "Y":
+            pass #this might need to be continue instead of pass, idk
     
     def reset_password(password):
         """ Allows user to reset existing password if the password 
