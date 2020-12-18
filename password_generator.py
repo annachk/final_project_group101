@@ -17,7 +17,6 @@ class Generator:
     
     def __init__(self):
         """ Initializes Generator's attributes"""
-        
         filename = "100000_regularly_used_passwords_breached.txt"
         # all_same stores whole regularly used passwords breached 
         self.all_same = []
@@ -147,7 +146,7 @@ class Generator:
         
         
     def generate_password(self):
-        """ Generate a random password based on the user’s suggestion and 
+        """ Generates a random password based on the user’s suggestion and 
             password requirements defined by the user or, if the suggestion
             was not approved, a totally randomized password
             that agrees with the password requirements
@@ -197,22 +196,38 @@ class Generator:
             pass      
                             
     def password_manager():
-        """ Asks the user if they would like to input their newly 
-            generated password into a text document to keep track of them.
-            The user will be able to input the account type, account username/email, 
-            and generated password to store on each line in the text file.
-            The user can elect to not use the password manager after they 
-            create their passwords.
+        """ Asks the user if they would like to input their newly generated 
+            password into a generated text document to keep track of them.
+            The user will be able to input the account type, account 
+            username/email, and generated password to store on each line in 
+            the text file. The user can elect to not use the password manager
+            after they create their passwords.
+            
+            Args:
+                response (str): Whether the user wants to use the password
+                    manager or not, Y for yes or N for no
+                account (str): the name of the account, ie. Google
+                username (str): the username or email for the account
+                
+            Side effects: 
+                Creates and/or updates a text document (pwdmanager.txt)
+                with account types, usernames, and passwords.
         """
-        response = input("Would you like to store your username and password in a password manager? Type Y for yes or N for no: ")
+        response = input("Would you like to store your username and password\
+                         in a password manager? Type Y for yes or N for no: ")
         if response == "Y":
             with open("pwdmanager.txt","a+") as pwdmanager:
-                account = input("Please enter the account name (ie. Google, Apple, Netflix, etc: ")
-                username = input("Please enter the username/email address for the account: ")
-                pwdmanager.write(f"{account} {username} {pw}")
+                account = input("Please enter the account name (ie. Google, \
+                                Apple, Netflix, etc: ")
+                username = input("Please enter the username/email address \
+                                 for the account: ")
+                pwdmanager.write(f"{account} {username} {self.pw}\n") 
+                #unsure if its pw or self.pw (or generate_password.pw?) ^
                 pwdmanager.close()
+                print("Your password information has been stored in \
+                      pwdmanager.txt.")
         elif response != "Y":
-            pass #this might need to be continue instead of pass, idk
+            print("Your password will not be saved.")
     
 def find_password(username):
     """Allows user to find their password in their text file when
