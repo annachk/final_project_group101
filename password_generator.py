@@ -192,13 +192,7 @@ class Generator:
                 
         elif self.user_suggestion_status == "Denied":
             pass      
-                        
-
-class Manager:
-    """ Allows user to save his/her usernames/emails and their respective 
-        passwords;
-        If asked, returns the previously generated passwords
-    """        
+                            
     def password_manager():
         """ Asks the user if they would like to input their newly 
             generated passwords into a text document to keep track of them.
