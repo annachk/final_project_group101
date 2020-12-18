@@ -17,17 +17,17 @@ class Generator:
     def __init__(self):
         """ Initializes Generator's attributes"""
         
-        self.filename = "100000_regularly_used_passwords_breached.txt"
+        filename = "100000_regularly_used_passwords_breached.txt"
         # all_same stores whole regularly used passwords breached 
         self.all_same = []
         # all_too_similar stores parts of regularly used passwords breached
         self.all_too_similar = []
-        self.get_passwords()
+        self.get_passwords(filename)
         self.suggestion = ''
         self.user_suggestion_status = 'Denied'
         self.requirements = {}
         
-    def get_passwords(self):
+    def get_passwords(self, filename):
         ''' Read content from file and put it into two lists, 
             one for whole passwords and the other for parts of passwords
         
@@ -35,9 +35,9 @@ class Generator:
             filename(str): the path to a file to be read in
         '''
         
-        with open(self.filename, "r", encoding = "utf-8") as f:
+        with open(filename, "r", encoding = "utf-8") as f:
             content = f.read()        
-            same = (r".*")
+            same = (r"(.*\S)")
             too_similar = (r"([0-9]{3,})|([a-zA-Z]{3,})")
             
             self.all_same = [same_words for same_words in re.findall(same, content) if len(same_words) > 0]
@@ -56,13 +56,13 @@ class Generator:
             suggestion(str): user's suggestion of what to include in the generated password
         '''
         self.suggestion = suggestion
-        self.requirements = self.password_requirements()
         
         if self.suggestion in self.all_same:
             print("Exact password found in the regularly used password file")
-        if self.suggestion in self.all_too_similar:
+        elif self.suggestion in self.all_too_similar:
             print("This is part of a regularly used password")
         else:
+            self.requirements = self.password_requirements()
             if self.requirements['1'] < (len(self.suggestion) + len(self.requirements) - 1):
                 print("A greater length is necessary to fulfill all requirements while including your suggestion.")
             else:
