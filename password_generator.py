@@ -188,7 +188,11 @@ class Generator:
 
             if 4 in requirements:
                 # add mix of letters, numbers, and symbols to user's suggestion
-                pass # this is temporary while there is no code
+                pw = random_chars.append(lop3_list)
+                pwchars = alphabet + random_nums + string.punctuation
+                pw2 = "".join(pwchars) + "".join(pw) for i in pw_length
+                random.shuffle(pw2)
+                return pw2
                 
         elif self.user_suggestion_status == "Denied":
             pass      
