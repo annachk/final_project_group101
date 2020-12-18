@@ -85,8 +85,6 @@ class Generator:
                 self.user_suggestion_status = 'Approved'
                 print("Your suggestion passed. It will be used when "
                       "generating your password")
-                return 'Approved'
-        return 'Denied'
             
     def password_requirements(self):
         """ Get password requirements, defined by the service provider,
@@ -190,7 +188,7 @@ class Generator:
                 # add mix of letters, numbers, and symbols to user's suggestion
                 pw = random_chars.append(lop3_list)
                 pwchars = alphabet + random_nums + string.punctuation
-                pw2 = "".join(pwchars) + "".join(pw) for i in pw_length
+                pw2 = "".join(pwchars) + "".join((pw) for i in range(0, pw_length))
                 random.shuffle(pw2)
                 return pw2
                 
@@ -270,7 +268,6 @@ def main(suggestion):
         generated password 
     """
     gen = Generator()
-    suggestion = "password" 
     # "password" isn't an acceptable suggestion to be in the pasword. Try "l0ve"
     gen.evaluate_suggestion(suggestion) 
     # ^ test __init__, get_passwords, evaluate_suggestion, password_requirements
