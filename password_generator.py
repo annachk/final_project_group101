@@ -6,6 +6,8 @@ import random
 import string
 import sys
 from argparse import ArgumentParser
+import random
+import string
 
 class Generator:
     """ Get user's suggestion of what to put in the password, 
@@ -129,21 +131,55 @@ class Generator:
             This function works together with generate_password()
         """
         
-        lop = input('Select level of security for Password Suggestion (1-3), \
-            with 1 being least secure and 3 being most secure')
+        lop = input('''Select level of security for Password Suggestion (1-3),
+            with 1 being least secure and 3 being most secure: ''')
         
-        if lop == 2:
+        if lop == '1':
+            #returns the suggestion as is
+            lop1_list = self.suggestion
+            return lop1_list
+        if lop == '2':
             #slice user's suggestion into a pieces, stores into a list
-            lop2_list = list(self.suggestion)
+            groups_of = random.randint(2, 4)
+            lop2_list = self.suggestion
+            lop2_list = [lop2_list[chars:chars + groups_of] 
+                         for chars in range(0, len(lop2_list), groups_of)]
+            #returns a list of characters splitted into groups of random numbers of characters
             return lop2_list
-        elif lop == 3:
-            # slice suggestion into pieces, stores into a list
+        elif lop == '3':
+            #slice user's suggestion into pieces, stores into a list and randomizes the list
             lop3_list = list(self.suggestion)
-            # randomizes the list
             random.shuffle(lop3_list)
+            #returns a list of characters splitted into groups of one and then randomized
             return lop3_list
         
-        
+    def num(self, pw, insert_range, random_nums):
+        '''if 2(num)'''
+        insert_here = random.randint(1, insert_range) #determines a random number to use for this requirement
+        num_list = list(random_nums) #convert the randomly generatred numbers into a list.
+        num_list.insert(insert_here, pw) #adds User's Suggestion into the list at a random index.
+        pw = ''.join(str(i) for i in num_list) #convert this list to a string with no spaces. This is the password.
+        insert_range -= insert_here #updates insert_range
+        return pw, insert_range
+    
+    def let(self, pw, insert_range, random_let):
+        '''if 3(low and upp case letters)'''
+        insert_here = random.randint(1, insert_range)
+        let_list = list(random_let)
+        let_list.insert(insert_here, pw)
+        pw = ''.join(str(i) for i in let_list)
+        insert_range -= insert_here
+        return pw, insert_range
+    def num_let_sym(self, pw, insert_range, random_num_let_sym):
+        '''if 4(nums, letters, and symbols)'''
+        insert_here = random.randint(1, insert_range)
+        num_let_sym_list = list(random_num_let_sym)
+        num_let_sym_list.insert(insert_here, pw)
+        pw = ''.join(str(i) for i in num_let_sym_list)
+        insert_range -= insert_here
+        return pw, insert_range
+    
+    
         
     def generate_password(self):
         """ Generates a random password based on the user’s suggestion and 
@@ -153,47 +189,34 @@ class Generator:
             This function works together with level_of_personalization()
             and password_requirements().
         """
-        requirements = self.password_requirements()
+        pw = self.level_of_personalization()
         
         alphabet = string.ascii_lowercase + string.ascii_uppercase
-        pw_length = requirements[1] - len(self.suggestion)  #pw_length
-        
+        pw_length = self.requirements['1'] - len(self.suggestion)
+        insert_range = pw_length - len(self.requirements) + 1 #determines the range of the insert
+        #print(insert_range)
+                    
         random_nums = ''.join(["{}".format(random.randint(0, 9)) 
                                for num in range(0, pw_length)])
-        random_chars = ''.join(random.choice(alphabet) 
-                               for char in range(pw_length))
-        insert_range = random.randint(1, pw_length) #insert_range
-        
-        if self.user_suggestion_status == "Approved":
-            if 2 in requirements:
-                #convert the randomly generatred numbers into a list.
-                num_list = list(random_nums) 
-                #adds User's Suggestion into the list at a random index.
-                num_list.insert(insert_range, self.suggestion) 
-                #convert this list to a string with no spaces
-                pw = ''.join(str(i) for i in num_list) 
-                return pw #this is the password
-                
-            if 3 in requirements:
-                pw1 = random_chars1.append(lop2_list)
-                random.shuffle(pw1)
-                #print(random_chars)
-                #print(random_chars_list)
-                #print("password:")
-                #print(pw1)
-                return pw1
+        random_let = ''.join([random.choice(alphabet) 
+                              for char in range(pw_length)]) #gives a sequence of random, lower and upper case, letters
+        random_num_let_sym = ''.join([random.choice(string.ascii_letters + 
+                                    string.digits + string.punctuation) 
+                                    for n in range(0, pw_length)]) #gives a sequence of random numbers, lower and upper case letters, and symbols
 
-            if 4 in requirements:
-                # add mix of letters, numbers, and symbols to user's suggestion
-                pw = random_chars.append(lop3_list)
-                pwchars = alphabet + random_nums + string.punctuation
-                pw2 = "".join(pwchars) + "".join((pw) for i in range(0, pw_length))
-                random.shuffle(pw2)
-                return pw2
-                pass # this is temporary while there is no code
-                
-        elif self.user_suggestion_status == "Denied":
-            pass      
+        if self.user_suggestion_status == "Approved":
+            if '4' in self.requirements:
+                pw, insert_range = self.num_let_sym(pw, insert_range, random_num_let_sym)
+                print(pw)
+                return pw
+            if '2' in self.requirements:
+                pw, insert_range = self.num(pw, insert_range, random_nums)
+            if '3' in self.requirements:
+                pw, insert_range = self.let(pw, insert_range, random_let)
+            print(pw)
+            return pw
+        else:
+            pass
                             
     def password_manager():
         """ Asks the user if they would like to input their newly generated 
@@ -300,6 +323,7 @@ def main(suggestion):
     # "password" isn't an acceptable suggestion to be in the pasword. Try "l0ve"
     gen.evaluate_suggestion(suggestion) 
     # ^ test __init__, get_passwords, evaluate_suggestion, password_requirements
+    gen.generate_password()
 
 def parse_args(arglist):
     """ Parse command-line arguments. """
