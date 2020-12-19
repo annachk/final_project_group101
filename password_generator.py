@@ -28,6 +28,7 @@ class Generator:
         self.suggestion = ''
         self.user_suggestion_status = 'Denied'
         self.requirements = {}
+        self.password = ''
         
     def get_passwords(self, filename):
         ''' Read content from file and put it into two lists, 
@@ -293,20 +294,21 @@ class Generator:
                 #convert this list to a string with no spaces
                 pw_final = ''.join(str(i_nls) for i_nls in pw)
                 print(f'Password: {pw_final}')
-                return pw_final
-            if '2' in self.requirements:
-                pw, insert_range = self.num(pw, insert_range)
-            if '3' in self.requirements:
-                pw, insert_range = self.let(pw, insert_range)
-            #convert the list to a string with no spaces
-            pw_final = ''.join(str(i) for i in pw)
-            return pw_final
-            print(f'Password: {pw_final}')
+                self.password = pw_final
+            else:
+                if '2' in self.requirements:
+                    pw, insert_range = self.num(pw, insert_range)
+                if '3' in self.requirements:
+                    pw, insert_range = self.let(pw, insert_range)
+                #convert the list to a string with no spaces
+                pw_final = ''.join(str(i) for i in pw)
+                self.password = pw_final
+                print(f'Password: {pw_final}')
             
         else:
             pass
                             
-    def password_manager():
+    def password_manager(self):
         """ Asks the user if they would like to input their newly generated 
             password into a generated text document to keep track of them.
             The user will be able to input the account type, account 
@@ -324,21 +326,27 @@ class Generator:
                 Creates and/or updates a text document (pwdmanager.txt)
                 with account types, usernames, and passwords.
         """
-        response = input("Would you like to store your username and password\
-                         in a password manager? Type Y for yes or N for no: ")
-        if response == "Y":
-            with open("pwdmanager.txt","a+") as pwdmanager:
-                account = input("Please enter the account name (ie. Google, \
-                                Apple, Netflix, etc: ")
-                username = input("Please enter the username/email address \
-                                 for the account: ")
-                pwdmanager.write(f"{account} {username} {self.pw}\n") 
-                #unsure if its pw or self.pw (or generate_password.pw?) ^
-                pwdmanager.close()
-                print("Your password information has been stored in \
-                      pwdmanager.txt.")
-        elif response != "Y":
-            print("Your password will not be saved.")
+        print('\n------ PASSWORD MANAGER ------\n')
+        
+        while True:
+            response = input("Would you like to store your username and password "
+                         "in a password manager? Type Y for yes or N for no: ")
+            if response == "Y":
+                with open("pwdmanager.txt","a+") as pwdmanager:
+                    account = input("Please enter the account name (ie. Google, "
+                                    "Apple, Netflix, etc): ")
+                    username = input("Please enter the username/email address "
+                                    "for the account: ")
+                    pwdmanager.write(f"{account} {username} {self.password}\n")
+                    pwdmanager.close()
+                    print("Your password information has been stored in "
+                        "pwdmanager.txt.")
+                    break
+            elif response == "N":
+                print("Your password will not be saved.")
+                break
+            else:
+                continue
     
 def find_password(username):
     """ Allows user to find their password in their text file when
@@ -412,7 +420,7 @@ def main(suggestion):
     # "password" isn't an acceptable suggestion to be in the pasword. Try "l0ve"
     gen.evaluate_suggestion(suggestion) 
     # ^ test __init__, get_passwords, evaluate_suggestion, password_requirements
-    #gen.generate_password()
+    gen.password_manager()
 
 def parse_args(arglist):
     """ Parse command-line arguments. """
