@@ -63,7 +63,7 @@ class Generator:
         
         Args:
             suggestion(str): user's suggestion of what to include in 
-            the generated password
+                the generated password
             
         Side effects:
             changes the variable "suggestion"
@@ -80,12 +80,13 @@ class Generator:
             self.requirements = self.password_requirements()
             if self.requirements['1'] < (len(self.suggestion) + 
                                          len(self.requirements) - 1):
-                print("A greater length is necessary to fulfill all \
-                    requirements while including your suggestion.")
+                print('A greater length is necessary to fulfill all '
+                    'requirements while including your suggestion')
             else:
                 self.user_suggestion_status = 'Approved'
                 print("Your suggestion passed. It will be used when "
                       "generating your password")
+                self.generate_password()
             
     def password_requirements(self):
         """ Get password requirements, defined by the service provider,
@@ -128,33 +129,67 @@ class Generator:
                 2: User's suggestion is broken apart within the password.
                 3: User's suggestion is broken apart
                     and scattered randomly throughout the password.
-            This function works together with generate_password()
+        
+        Returns:
+            Either one:
+                lop1_list(list): the suggestion in a list
+                lop2_list(list): a list of characters splitted into groups 
+                    of random numbers of characters
+                lop3_list(list): a list of characters splitted into groups of one and then randomized
         """
+        print('\n------ LEVEL OF PERSONALIZATION ------\n'
+                '1 - Suggestion remains unbroken within the password\n'
+                '2 - Suggestion is broken apart into groups of random length\n'
+                '3 - Suggestion is broken apart into groups of one character\n')
+        while True:
+            lop = input('Select level of security for Password Suggestion (1-3), '
+                        'with 1 being least secure and 3 being most secure: ')
+            if lop in ('1','2','3'):
+                if lop == '1':
+                    lop1_list = self.suggestion
+                    #returns the suggestion as is
+                    return lop1_list
+                    break
+                if lop == '2':
+                    groups_of = random.randint(2, 4)
+                    lop2_list = self.suggestion
+                    #slice user's suggestion into a pieces, stores into a list
+                    lop2_list = [lop2_list[chars:chars + groups_of] 
+                                for chars in range(0, len(lop2_list), groups_of)]
+                    #returns a list of characters splitted into groups of random numbers of characters
+                    return lop2_list
+                    break
+                elif lop == '3':
+                    #slice suggestion, stores into a list and randomizes the list
+                    lop3_list = list(self.suggestion)
+                    random.shuffle(lop3_list)
+                    #returns a list of characters splitted into groups of one and then randomized
+                    return lop3_list
+                    break
+            else: 
+                continue
         
-        lop = input('''Select level of security for Password Suggestion (1-3),
-            with 1 being least secure and 3 being most secure: ''')
         
-        if lop == '1':
-            #returns the suggestion as is
-            lop1_list = self.suggestion
-            return lop1_list
-        if lop == '2':
-            #slice user's suggestion into a pieces, stores into a list
-            groups_of = random.randint(2, 4)
-            lop2_list = self.suggestion
-            lop2_list = [lop2_list[chars:chars + groups_of] 
-                         for chars in range(0, len(lop2_list), groups_of)]
-            #returns a list of characters splitted into groups of random numbers of characters
-            return lop2_list
-        elif lop == '3':
-            #slice suggestion, stores into a list and randomizes the list
-            lop3_list = list(self.suggestion)
-            random.shuffle(lop3_list)
-            #returns a list of characters splitted into groups of one and then randomized
-            return lop3_list
         
     def num(self, pw, insert_range):
-        '''if 2(num)'''
+        ''' If requirement number 2(num) was chosen,
+            this function adds a series of numbers to
+            the user's suggestion
+        
+        Args:
+            pw(list): list with user's suggestion
+            insert_range(int): the number of characters missing in the password
+        
+        Side effects:
+            changes pw (num_let_sym_list is the increented pw)
+            changes insert_range
+            
+        Returns:
+            num_let_sym_list(list): list with suggestion and 
+                added numbers, letters, and symbols
+            insert_range(int): number of characters still missing
+        
+        '''
         if '3' in self.requirements:
             #guarantees that it will be possible to include req 3
             insert_range -= 1
@@ -169,11 +204,28 @@ class Generator:
             #adds user's suggestion into the list
             num_list.insert(len(random_nums), c)
         random.shuffle(num_list)
-        insert_range -= range_value #updates insert_range
+        #updates insert_range
+        insert_range -= range_value
         return num_list, insert_range
     
     def let(self, pw, insert_range):
-        '''if 3(low and upp case letters)'''
+        ''' If requirement number 3(low and upp case letters) was chosen,
+            this function adds a series of letters to
+            the user's suggestion
+        
+        Args:
+            pw(list): list with user's suggestion
+            insert_range(int): the number of characters missing in the password
+        
+        Side effects:
+            changes pw (num_let_sym_list is the increented pw)
+            changes insert_range
+            
+        Returns:
+            num_let_sym_list(list): list with suggestion and 
+                added numbers, letters, and symbols
+            insert_range(int): number of characters still missing
+        '''
         if '2' in self.requirements:
             #guarantees that it will be possible to include req 3
             insert_range += 1
@@ -196,34 +248,48 @@ class Generator:
         return let_list, insert_range
     
     def num_let_sym(self, pw, insert_range):
-        '''if 4(nums, letters, and symbols)'''
-        #gives a sequence of random numbers, lower and upper case letters, and symbols
+        ''' If requirement number 4(nums, letters, and symbols) was chosen,
+            this function adds a series of numbers, letters, and symbols to
+            the user's suggestion
+        
+        Args:
+            pw(list): list with user's suggestion
+            insert_range(int): the number of characters missing in the password
+        
+        Side effects:
+            changes pw (num_let_sym_list is the increented pw)
+            
+        Returns:
+            num_let_sym_list(list): list with suggestion and 
+                added numbers, letters, and symbols
+        '''
+        #gives a sequence of random numbers, letters, and symbols
         random_num_let_sym = ''.join([random.choice(string.ascii_letters + 
                                     string.digits + string.punctuation) 
                                     for n in range(insert_range)])
         num_let_sym_list = list(random_num_let_sym)
         for c in pw:
-            num_let_sym_list.insert(len(random_num_let_sym), c) #adds user's Suggestion into the list
+            #adds user's suggestion into the list
+            num_let_sym_list.insert(len(random_num_let_sym), c)
         random.shuffle(num_let_sym_list)
         
-        return num_let_sym_list, insert_range    
+        return num_let_sym_list   
         
     def generate_password(self):
         """ Generates a random password based on the user’s suggestion and 
-            password requirements defined by the user or, if the suggestion
-            was not approved, a totally randomized password
-            that agrees with the password requirements
-            This function works together with level_of_personalization()
-            and password_requirements().
+            password requirements defined by the user
+        Returns:
+            pw_final(str): final state of the generated password
         """
         pw = self.level_of_personalization()
 
+        #determines the range of the insert
         pw_length = self.requirements['1'] - len(self.suggestion)
-        insert_range = pw_length #determines the range of the insert
+        insert_range = pw_length
 
         if self.user_suggestion_status == "Approved":
             if '4' in self.requirements:
-                pw, insert_range = self.num_let_sym(pw, insert_range)
+                pw = self.num_let_sym(pw, insert_range)
                 #convert this list to a string with no spaces
                 pw_final = ''.join(str(i_nls) for i_nls in pw)
                 print(f'Password: {pw_final}')
@@ -232,8 +298,8 @@ class Generator:
                 pw, insert_range = self.num(pw, insert_range)
             if '3' in self.requirements:
                 pw, insert_range = self.let(pw, insert_range)
-            
-            pw_final = ''.join(str(i) for i in pw) #convert this list to a string with no spaces. This is the password.
+            #convert the list to a string with no spaces
+            pw_final = ''.join(str(i) for i in pw)
             return pw_final
             print(f'Password: {pw_final}')
             
@@ -275,15 +341,15 @@ class Generator:
             print("Your password will not be saved.")
     
 def find_password(username):
-    """Allows user to find their password in their text file when
-    they put in their username.
+    """ Allows user to find their password in their text file when
+        they put in their username.
     
     Argument:
-    username (str): username of an account
+        username (str): username of an account
     
     Returns:
-    the password that corresponds with the username that the user
-    inputs
+        the password that corresponds with the username that the user
+            inputs
     """
     with open('pwdmanager.txt', 'r') as f:
         total_lines = f.readlines()
@@ -299,7 +365,8 @@ def reset_password(username,password):
         is entered incorrectly more than 3 times in the login page;
         
     Returns:
-        the newly generated password, if the user decides to reset their password
+        the newly generated password, if the user decides to reset 
+            their password
     """
     with open('pwdmanager.txt', 'r') as f:
         username = input("Enter username:")
@@ -311,7 +378,7 @@ def reset_password(username,password):
                 if username in line and password in line:
                     is_finished = True
                 else:
-                    print(f"Sorry, the password is incorrect. Please try again.")
+                    print("The password is incorrect. Please try again.")
                     attempts += 1
                     password = input("Enter password:")
     
@@ -345,7 +412,7 @@ def main(suggestion):
     # "password" isn't an acceptable suggestion to be in the pasword. Try "l0ve"
     gen.evaluate_suggestion(suggestion) 
     # ^ test __init__, get_passwords, evaluate_suggestion, password_requirements
-    gen.generate_password()
+    #gen.generate_password()
 
 def parse_args(arglist):
     """ Parse command-line arguments. """
