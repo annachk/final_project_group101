@@ -147,39 +147,66 @@ class Generator:
             #returns a list of characters splitted into groups of random numbers of characters
             return lop2_list
         elif lop == '3':
-            #slice user's suggestion into pieces, stores into a list and randomizes the list
+            #slice suggestion, stores into a list and randomizes the list
             lop3_list = list(self.suggestion)
             random.shuffle(lop3_list)
             #returns a list of characters splitted into groups of one and then randomized
             return lop3_list
         
-    def num(self, pw, insert_range, random_nums):
+    def num(self, pw, insert_range):
         '''if 2(num)'''
-        insert_here = random.randint(1, insert_range) #determines a random number to use for this requirement
-        num_list = list(random_nums) #convert the randomly generatred numbers into a list.
-        num_list.insert(insert_here, pw) #adds User's Suggestion into the list at a random index.
-        pw = ''.join(str(i) for i in num_list) #convert this list to a string with no spaces. This is the password.
-        insert_range -= insert_here #updates insert_range
-        return pw, insert_range
+        if '3' in self.requirements:
+            #guarantees that it will be possible to include req 3
+            insert_range -= 1
+            range_value = random.randint(1, insert_range)
+        else:
+            range_value = insert_range
+        random_nums = ''.join(["{}".format(random.randint(0, 9)) 
+                               for num in range(range_value)])
+        #convert the randomly generatred numbers into a list
+        num_list = list(random_nums)
+        for c in pw:
+            #adds user's suggestion into the list
+            num_list.insert(len(random_nums), c)
+        random.shuffle(num_list)
+        insert_range -= range_value #updates insert_range
+        return num_list, insert_range
     
-    def let(self, pw, insert_range, random_let):
+    def let(self, pw, insert_range):
         '''if 3(low and upp case letters)'''
-        insert_here = random.randint(1, insert_range)
+        if '2' in self.requirements:
+            #guarantees that it will be possible to include req 3
+            insert_range += 1
+            range_value = insert_range
+        else:
+            range_value = insert_range
+            
+        alphabet = string.ascii_lowercase + string.ascii_uppercase
+        #gives a sequence of random, lower and upper case, letters
+        random_let = ''.join([random.choice(alphabet) 
+                              for char in range(range_value)])
+        #insert_here = random.randint(1, insert_range)
         let_list = list(random_let)
-        let_list.insert(insert_here, pw)
-        pw = ''.join(str(i) for i in let_list)
-        insert_range -= insert_here
-        return pw, insert_range
-    def num_let_sym(self, pw, insert_range, random_num_let_sym):
+        for c in pw:
+            #adds user's Suggestion into the list
+            let_list.insert(len(random_let), c)
+        random.shuffle(let_list)
+        insert_range -= range_value
+        
+        return let_list, insert_range
+    
+    def num_let_sym(self, pw, insert_range):
         '''if 4(nums, letters, and symbols)'''
-        insert_here = random.randint(1, insert_range)
+        #gives a sequence of random numbers, lower and upper case letters, and symbols
+        random_num_let_sym = ''.join([random.choice(string.ascii_letters + 
+                                    string.digits + string.punctuation) 
+                                    for n in range(insert_range)])
         num_let_sym_list = list(random_num_let_sym)
-        num_let_sym_list.insert(insert_here, pw)
-        pw = ''.join(str(i) for i in num_let_sym_list)
-        insert_range -= insert_here
-        return pw, insert_range
-    
-    
+        for c in pw:
+            num_let_sym_list.insert(len(random_num_let_sym), c) #adds user's Suggestion into the list
+        random.shuffle(num_let_sym_list)
+        
+        return num_let_sym_list, insert_range    
         
     def generate_password(self):
         """ Generates a random password based on the user’s suggestion and 
@@ -190,31 +217,26 @@ class Generator:
             and password_requirements().
         """
         pw = self.level_of_personalization()
-        
-        alphabet = string.ascii_lowercase + string.ascii_uppercase
+
         pw_length = self.requirements['1'] - len(self.suggestion)
-        insert_range = pw_length - len(self.requirements) + 1 #determines the range of the insert
-        #print(insert_range)
-                    
-        random_nums = ''.join(["{}".format(random.randint(0, 9)) 
-                               for num in range(0, pw_length)])
-        random_let = ''.join([random.choice(alphabet) 
-                              for char in range(pw_length)]) #gives a sequence of random, lower and upper case, letters
-        random_num_let_sym = ''.join([random.choice(string.ascii_letters + 
-                                    string.digits + string.punctuation) 
-                                    for n in range(0, pw_length)]) #gives a sequence of random numbers, lower and upper case letters, and symbols
+        insert_range = pw_length #determines the range of the insert
 
         if self.user_suggestion_status == "Approved":
             if '4' in self.requirements:
-                pw, insert_range = self.num_let_sym(pw, insert_range, random_num_let_sym)
-                print(pw)
-                return pw
+                pw, insert_range = self.num_let_sym(pw, insert_range)
+                #convert this list to a string with no spaces
+                pw_final = ''.join(str(i_nls) for i_nls in pw)
+                print(f'Password: {pw_final}')
+                return pw_final
             if '2' in self.requirements:
-                pw, insert_range = self.num(pw, insert_range, random_nums)
+                pw, insert_range = self.num(pw, insert_range)
             if '3' in self.requirements:
-                pw, insert_range = self.let(pw, insert_range, random_let)
-            print(pw)
-            return pw
+                pw, insert_range = self.let(pw, insert_range)
+            
+            pw_final = ''.join(str(i) for i in pw) #convert this list to a string with no spaces. This is the password.
+            return pw_final
+            print(f'Password: {pw_final}')
+            
         else:
             pass
                             
