@@ -425,7 +425,7 @@ def main(suggestion):
         see_passwords = input('Do you want to see your other passwords? '
                               'Please enter Y (Yes) or N (No): ')
         if see_passwords == "Y":
-            reset_password(username,password)
+            reset_password()
             break
         elif see_passwords == "N":
             break
