@@ -368,8 +368,9 @@ def find_password(username):
                 return account[1]
     print("Username not found.")
     
-def reset_password(username,password):
-    """ Allows user to reset existing password if the password 
+def reset_password():
+    """ Allows user to get access to othe functions of the program and 
+        reset existing password if the password 
         is entered incorrectly more than 3 times in the login page;
         
     Returns:
@@ -392,8 +393,8 @@ def reset_password(username,password):
     
     g = Generator()          
     if attempts >= 4:
-        answer = input("Reset your password? Please enter Yes or No")
-        if answer == "Yes":
+        answer = input("Reset your password? Please enter Y (Yes) or N (No)")
+        if answer == "Y":
             g.password_requirements = password.password_requirements
             new_password = g.generate_password() #should generate a new password
             return new_password
@@ -418,9 +419,19 @@ def main(suggestion):
     """
     gen = Generator()
     # "password" isn't an acceptable suggestion to be in the pasword. Try "l0ve"
-    gen.evaluate_suggestion(suggestion) 
-    # ^ test __init__, get_passwords, evaluate_suggestion, password_requirements
+    gen.evaluate_suggestion(suggestion)
     gen.password_manager()
+    while True:
+        see_passwords = input('Do you want to see your other passwords? '
+                              'Please enter Y (Yes) or N (No): ')
+        if see_passwords == "Y":
+            reset_password(username,password)
+            break
+        elif see_passwords == "N":
+            break
+        else:
+            continue
+        
 
 def parse_args(arglist):
     """ Parse command-line arguments. """
