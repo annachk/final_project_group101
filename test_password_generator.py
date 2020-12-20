@@ -55,20 +55,20 @@ def test_get_passwords():
         except:
             pass
         
-    def test_password_manager():
-        '''Test the password_manager function.'''
-        with mock.patch("builtins.input",side_effect=['Y','Google','joey@gmail.com']):
-            assert password_manager() == "Your password information has been saved in pwdmanager.txt."
-            captured = capsys.readouterr()
-            assert captured.out == ""
-        with mock.patch("builtins.input",side_effect=['N']):
-            assert password_manager() == "Your password will not be saved."
-            captured = capsys.readouterr()
-            assert captured.out == ""
-        with mock.patch("builtins.input",side_effect=['U']):
-            assert password_manager() == "Your password will not be saved."
-            captured = capsys.readouterr()
-            assert captured.out == ""
+def test_password_manager():
+    '''Test the password_manager function.'''
+    with mock.patch("builtins.input",side_effect=['Y','Google','joey@gmail.com']):
+        assert password_manager() == "Your password information has been saved in pwdmanager.txt."
+        captured = capsys.readouterr()
+        assert captured.out == ""
+    with mock.patch("builtins.input",side_effect=['N']):
+        assert password_manager() == "Your password will not be saved."
+        captured = capsys.readouterr()
+        assert captured.out == ""
+    with mock.patch("builtins.input",side_effect=['U']):
+        assert password_manager() == "Your password will not be saved."
+        captured = capsys.readouterr()
+        assert captured.out == ""
 
 def test_find_password():
     """Test the find_password function"""
