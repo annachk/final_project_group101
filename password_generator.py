@@ -150,7 +150,7 @@ class Generator:
                     lop1_list = self.suggestion
                     #returns the suggestion as is
                     return lop1_list
-                    break
+                    
                 if lop == '2':
                     groups_of = random.randint(2, 4)
                     lop2_list = self.suggestion
@@ -159,14 +159,14 @@ class Generator:
                                 for chars in range(0, len(lop2_list), groups_of)]
                     #returns a list of characters splitted into groups of random numbers of characters
                     return lop2_list
-                    break
+                    
                 elif lop == '3':
                     #slice suggestion, stores into a list and randomizes the list
                     lop3_list = list(self.suggestion)
                     random.shuffle(lop3_list)
                     #returns a list of characters splitted into groups of one and then randomized
                     return lop3_list
-                    break
+                    
             else: 
                 continue
         
@@ -186,8 +186,7 @@ class Generator:
             changes insert_range
             
         Returns:
-            num_let_sym_list(list): list with suggestion and 
-                added numbers, letters, and symbols
+            num_list(list): list with suggestion and added numbers
             insert_range(int): number of characters still missing
         
         '''
@@ -223,8 +222,7 @@ class Generator:
             changes insert_range
             
         Returns:
-            num_let_sym_list(list): list with suggestion and 
-                added numbers, letters, and symbols
+            num_let_sym_list(list): list with suggestion and added letters
             insert_range(int): number of characters still missing
         '''
         if '2' in self.requirements:
@@ -241,7 +239,7 @@ class Generator:
         #insert_here = random.randint(1, insert_range)
         let_list = list(random_let)
         for c in pw:
-            #adds user's Suggestion into the list
+            #adds user's suggestion into the list
             let_list.insert(len(random_let), c)
         random.shuffle(let_list)
         insert_range -= range_value
