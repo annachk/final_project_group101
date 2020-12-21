@@ -29,6 +29,7 @@ class Generator:
         self.user_suggestion_status = 'Denied'
         self.requirements = {}
         self.password = ''
+        self.lop = ''
         
     def get_passwords(self, filename):
         ''' Read content from file and put it into two lists, 
@@ -143,15 +144,15 @@ class Generator:
                 '2 - Suggestion is broken apart into groups of random length\n'
                 '3 - Suggestion is broken apart into groups of one character\n')
         while True:
-            lop = input('Select level of security for Password Suggestion (1-3), '
+            self.lop = input('Select level of security for Password Suggestion (1-3), '
                         'with 1 being least secure and 3 being most secure: ')
-            if lop in ('1','2','3'):
-                if lop == '1':
+            if self.lop in ('1','2','3'):
+                if self.lop == '1':
                     lop1_list = self.suggestion
                     #returns the suggestion as is
                     return lop1_list
                     
-                if lop == '2':
+                if self.lop == '2':
                     groups_of = random.randint(2, 4)
                     lop2_list = self.suggestion
                     #slice user's suggestion into a pieces, stores into a list
@@ -160,7 +161,7 @@ class Generator:
                     #returns a list of characters splitted into groups of random numbers of characters
                     return lop2_list
                     
-                elif lop == '3':
+                elif self.lop == '3':
                     #slice suggestion, stores into a list and randomizes the list
                     lop3_list = list(self.suggestion)
                     random.shuffle(lop3_list)
@@ -203,7 +204,8 @@ class Generator:
         for c in pw:
             #adds user's suggestion into the list
             num_list.insert(len(random_nums), c)
-        random.shuffle(num_list)
+        if self.lop != '1':
+            random.shuffle(num_list)
         #updates insert_range
         insert_range -= range_value
         return num_list, insert_range
@@ -241,7 +243,8 @@ class Generator:
         for c in pw:
             #adds user's suggestion into the list
             let_list.insert(len(random_let), c)
-        random.shuffle(let_list)
+        if self.lop != '1':
+            random.shuffle(random_let)
         insert_range -= range_value
         
         return let_list, insert_range
@@ -270,7 +273,8 @@ class Generator:
         for c in pw:
             #adds user's suggestion into the list
             num_let_sym_list.insert(len(random_num_let_sym), c)
-        random.shuffle(num_let_sym_list)
+        if self.lop != '1':
+            random.shuffle(num_let_sym_list)
         
         return num_let_sym_list   
         
