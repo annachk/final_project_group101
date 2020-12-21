@@ -3,6 +3,7 @@ import pytest
 from pathlib import Path
 import builtins
 from unittest import mock
+from password_generator import find_password
 
 
 g = Generator()
@@ -73,7 +74,22 @@ def test_password_manager():
 
 def test_find_password():
     """Test the find_password function"""
-    account, username, password = ("Google", "anna123@gmail.com","Snowman1")
-    assert username == g.find_password(username)     
+    sample_line = ("Google jess123@gmail.com Snowman1")
+    
+    filename = "sample_accounts.txt"
+    try:
+        with open(filename, "w", encoding="utf-8") as f:
+            f.write(sample_line)
+        assert find_password(filename,"jess123@gmail.com") == "Snowman1"
+        assert find_password(filename,"jess12@gmail.com") == "Username not found."
+        assert find_password(filename,"jess567@gmail.com") == "Username not found."
+        assert find_password(filename,"jess123") == "Username not found."
+        assert find_password(filename, "1") == "Username not found."
+    
+    finally:
+        try:
+            Path(filename).unlink()
+        except:
+            pass
 
     
