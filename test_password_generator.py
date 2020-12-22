@@ -4,7 +4,7 @@ from pathlib import Path
 import builtins
 from unittest import mock
 from password_generator import find_password
-
+from sys import stderr
 
 g = Generator()
 
@@ -57,8 +57,10 @@ def test_get_passwords():
         except:
             pass    
         
-def test_password_manager():
+def test_password_manager(capsys):
     '''Test the password_manager function.'''
+    
+    
     with mock.patch("builtins.input",side_effect=['Y','Google','joey@gmail.com']):
         assert g.password_manager() == "Your password information has been saved in pwdmanager.txt."
         captured = capsys.readouterr()
@@ -71,6 +73,21 @@ def test_password_manager():
         assert g.password_manager() == "Your password will not be saved."
         captured = capsys.readouterr()
         assert captured.out == ""
+
+    '''
+    with mock.patch("builtins.input",side_effect=['Y','Google','joey@gmail.com']):
+        g.password_manager()
+        captured = capsys.readouterr()
+        assert captured.out == "Your password information has been saved in pwdmanager.txt.\n"
+    with mock.patch("builtins.input",side_effect=['N']):
+        g.password_manager()
+        captured = capsys.readouterr()
+        assert captured.out == "Your password will not be saved.\n"
+    with mock.patch("builtins.input",side_effect=['U']):
+        g.password_manager()
+        captured = capsys.readouterr()
+        assert captured.out == "Your password will not be saved.\n"
+    '''
 
 def test_find_password():
     """Test the find_password function"""
