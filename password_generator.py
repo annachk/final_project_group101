@@ -114,9 +114,16 @@ class Generator:
             if pass_req_query == '5':
                 break
             elif pass_req_query == '1':
-                length = int(input('Enter the full amount of characters '
-                                   'for the password: '))
-                requirements[pass_req_query] = length
+                while True:
+                    try:
+                        length = int(input('Enter the full amount of characters '
+                                        'for the password: '))
+                        
+                        requirements[pass_req_query] = length
+                        break
+                    except ValueError:
+                        print('Please enter a whole number.')
+                        continue
             elif pass_req_query in ['2','3','4']:
                 requirements[pass_req_query] = ''
             else:
@@ -375,7 +382,7 @@ class Generator:
                 for line in f:
                     if username in line and password in line:
                         account = input('Enter account name: ')
-                        self.find_account("pwdmanager.txt", account)
+                        print(self.find_account("pwdmanager.txt", account))
                         is_finished = True
                         break
                     else:
@@ -413,7 +420,7 @@ class Generator:
             for line in total_lines:
                 account_info = line.split()
                 if account == account_info[0]:
-                    print(f'Username: {account_info[1]} Password: {account_info[2]}')
+                    #print(f'Username: {account_info[1]} Password: {account_info[2]}')
                     return f'Username: {account_info[1]} Password: {account_info[2]}'
         return "Account not found."
     
@@ -462,12 +469,6 @@ def parse_args(arglist):
     parser = ArgumentParser(arglist)
     parser.add_argument("suggestion", help="suggestion of a sequence of \
         characters to be used in the password")
-    '''####
-    parser.add_argument("filename", help="file containing account type, \
-        username, and password in each line")
-    parser.add_argument("username", help="username that has a password \
-        that corresponds with it")
-    ####'''
     return parser.parse_args(arglist)
     
 
