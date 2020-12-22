@@ -137,19 +137,20 @@ class Generator:
                 lop1_list(list): the suggestion in a list
                 lop2_list(list): a list of characters splitted into groups 
                     of random numbers of characters
-                lop3_list(list): a list of characters splitted into groups of one and then randomized
+                lop3_list(list): a list of characters splitted into groups 
+                    of one and then randomized
         """
         print('\n------ LEVEL OF PERSONALIZATION ------\n'
                 '1 - Suggestion remains unbroken within the password\n'
                 '2 - Suggestion is broken apart into groups of random length\n'
                 '3 - Suggestion is broken apart into groups of one character\n')
         while True:
-            self.lop = input('Select level of security for Password Suggestion (1-3), '
-                        'with 1 being least secure and 3 being most secure: ')
+            self.lop = input('Select level of security for Password Suggestion '
+                        '(1-3), with 1 being least secure and 3 being most '
+                        'secure: ')
             if self.lop in ('1','2','3'):
                 if self.lop == '1':
                     lop1_list = self.suggestion
-                    #returns the suggestion as is
                     return lop1_list
                     
                 if self.lop == '2':
@@ -158,14 +159,12 @@ class Generator:
                     #slice user's suggestion into a pieces, stores into a list
                     lop2_list = [lop2_list[chars:chars + groups_of] 
                                 for chars in range(0, len(lop2_list), groups_of)]
-                    #returns a list of characters splitted into groups of random numbers of characters
                     return lop2_list
                     
                 elif self.lop == '3':
-                    #slice suggestion, stores into a list and randomizes the list
+                    #slice suggestion, stores into a list,randomizes the list
                     lop3_list = list(self.suggestion)
                     random.shuffle(lop3_list)
-                    #returns a list of characters splitted into groups of one and then randomized
                     return lop3_list
                     
             else: 
@@ -328,21 +327,22 @@ class Generator:
                 Creates and/or updates a text document (pwdmanager.txt)
                 with account types, usernames, and passwords.
         """
-        print('\n------ PASSWORD MANAGER ------\n')
+        
         
         while True:
-            response = input("Would you like to store your username and password "
-                         "in a password manager? Type Y for yes or N for no: ")
+            response = input("Would you like to store your username and "
+                         "password in a password manager? Type Y for yes "
+                         "or N for no: ")
             if response == "Y":
                 with open("pwdmanager.txt","a+") as pwdmanager:
-                    account = input("Please enter the account name (ie. Google, "
-                                    "Apple, Netflix, etc): ")
+                    account = input("Please enter the account name (ie. Google,"
+                                    " Apple, Netflix, etc): ")
                     username = input("Please enter the username/email address "
                                     "for the account: ")
                     pwdmanager.write(f"{account} {username} {self.password}\n")
                     pwdmanager.close()
                     print("Your password information has been stored in "
-                        "pwdmanager.txt.")
+                          "pwdmanager.txt.")
                     break
             elif response == "N":
                 print("Your password will not be saved.")
@@ -420,7 +420,8 @@ def main(suggestion,filename,username):
         Allows user to save his/her usernames/emails and their respective
         passwords;
         Returns the generated password and, if asked, the previously
-        generated passwords
+        generated passwords, as long as the login and password to access
+        such info is correct
     Args:
         suggestion(str): user's suggestion of what to include in the 
         generated password 
@@ -428,6 +429,8 @@ def main(suggestion,filename,username):
     gen = Generator()
     # "password" isn't an acceptable suggestion to be in the pasword. Try "l0ve"
     gen.evaluate_suggestion(suggestion)
+    
+    print('\n------ PASSWORD MANAGER ------\n')
     gen.password_manager()
     while True:
         see_passwords = input('Do you want to see your other passwords? '
@@ -439,7 +442,8 @@ def main(suggestion,filename,username):
             break
         else:
             continue
-     
+    
+    print('\n------ PASSWORD FINDER ------\n') 
     while True:
         find_passwords = input("Do you want to find your password for a"
                                "specific account? Please enter Yes or No: ")
@@ -455,12 +459,13 @@ def parse_args(arglist):
     parser = ArgumentParser(arglist)
     parser.add_argument("suggestion", help="suggestion of a sequence of \
         characters to be used in the password")
+    ####
     parser.add_argument("filename", help="file containing account type, \
         username, and password in each line")
     parser.add_argument("username", help="username that has a password \
         that corresponds with it")
     return parser.parse_args(arglist)
-
+    ####
 
 if __name__ == "__main__":
     args = parse_args(sys.argv[1:])
