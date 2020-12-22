@@ -89,8 +89,9 @@ def test_password_manager(capsys):
         assert captured.out == "Your password will not be saved.\n"
     '''
 
-def test_find_password():
-    """Test the find_password function"""
+def test_find_account():
+    """Test the find_account function"""
+    
     sample_line = ("Google jess123@gmail.com Snowman1\nFacebook anna123@gmail.com finalprojectyey!")
     
     filename_manager = "sample_accounts.txt"
@@ -98,10 +99,10 @@ def test_find_password():
         with open(filename_manager, "w", encoding="utf-8") as temp_f:
             temp_f.write(sample_line)
         
-        assert g.find_password(filename_manager, "Google") == "Username: jess123@gmail.com Password: Snowman1"
-        assert g.find_password(filename_manager, "Facebook") == "Username: anna123@gmail.com Password: finalprojectyey!"
-        assert g.find_password(filename_manager, "goooogle") == "Account not found."
-        assert g.find_password(filename_manager, "jess123@gmail.com") == "Account not found."
+        assert g.find_account(filename_manager, "Google") == "Username: jess123@gmail.com Password: Snowman1"
+        assert g.find_account(filename_manager, "Facebook") == "Username: anna123@gmail.com Password: finalprojectyey!"
+        assert g.find_account(filename_manager, "goooogle") == "Account not found."
+        assert g.find_account(filename_manager, "jess123@gmail.com") == "Account not found."
     
     finally:
         try:
