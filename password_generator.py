@@ -100,7 +100,7 @@ class Generator:
         """
         
         requirements = {'1':len(self.suggestion)}
-        print('\n------ REQUIREMENTS ------\n'
+        print('\n--- REQUIREMENTS ---\n'
                 '1 - Password length\n'
                 '2 - Include numbers\n'
                 '3 - Include lowercase and uppercase letters\n'
@@ -140,7 +140,7 @@ class Generator:
                 lop3_list(list): a list of characters splitted into groups 
                     of one and then randomized
         """
-        print('\n------ LEVEL OF PERSONALIZATION ------\n'
+        print('\n--- LEVEL OF PERSONALIZATION ---\n'
                 '1 - Suggestion remains unbroken within the password\n'
                 '2 - Suggestion is broken apart into groups of random length\n'
                 '3 - Suggestion is broken apart into groups of one character\n')
@@ -204,7 +204,9 @@ class Generator:
             #adds user's suggestion into the list
             num_list.insert(len(random_nums), c)
         if self.lop != '1':
+            num_list = list(num_list)
             random.shuffle(num_list)
+            num_list = ''.join(num_list)
         #updates insert_range
         insert_range -= range_value
         return num_list, insert_range
@@ -243,7 +245,9 @@ class Generator:
             #adds user's suggestion into the list
             let_list.insert(len(random_let), c)
         if self.lop != '1':
+            random_let = list(random_let)
             random.shuffle(random_let)
+            random_let = ''.join(random_let)
         insert_range -= range_value
         
         return let_list, insert_range
@@ -273,8 +277,9 @@ class Generator:
             #adds user's suggestion into the list
             num_let_sym_list.insert(len(random_num_let_sym), c)
         if self.lop != '1':
+            num_let_sym_list = list(num_let_sym_list)
             random.shuffle(num_let_sym_list)
-        
+            num_let_sym_list = ''.join(num_let_sym_list)
         return num_let_sym_list   
         
     def generate_password(self):
@@ -350,68 +355,74 @@ class Generator:
             else:
                 continue
     
-def find_password(filename,username):
-    """ Allows user to find their password in their text file when
-        they put in their username.
-    
-    Parameters:
-        filename (str): contains path to a file of accounts that will be read
-    
-    Argument:
-        username (str): username of an account
-    
-    Returns:
-        the password that corresponds with the username that the user
-            inputs
-    """
-    with open(filename, 'r') as f:
-        total_lines = f.readlines()
-        for line in total_lines:
-            account = line.split()
-            if username == account[1]:
-                #print(account[1])
-                return account[2]
-    return "Username not found."
-    
-def reset_password(filename):
-    """ Allows user to get access to othe functions of the program and 
-        reset existing password if the password 
-        is entered incorrectly more than 5 times in the login page;
-    
-    Parameters:
-        filename (str): contains path to a file of accounts that will be read
-    Returns:
-        the newly generated password, if the user decides to reset 
-            their password
-    """
-    with open(filename, 'r') as f:
-        username = input("Enter username: ")
-        attempts = 1
-        is_finished = False
-        while attempts < 4 and is_finished == False:
-            #password = input("Enter password: ")
-            for line in f:
+    def reset_password(self):
+        """ Allows user to get access to othe functions of the program and 
+            reset existing password if the password 
+            is entered incorrectly more than 5 times in the login page;
+        
+        Parameters:
+            filename (str): contains path to a file of accounts that will be read
+        Returns:
+            the newly generated password, if the user decides to reset 
+                their password
+        """
+        filename_manager = "pwdmanager.txt"
+        with open(filename_manager, 'r') as f:
+            attempts = 1
+            is_finished = False
+            while attempts < 4 and is_finished == False:
+                #password = input("Enter password: ")
+                username = input("Enter username: ")
                 password = input("Enter password: ")
-                if username in line and password in line:
-                    is_finished = True
-                else:
-                    print("The password is incorrect. Please try again.")
-                    attempts += 1
-                    #password = input("Enter password:")
+                
+                for line in f:
+                    if username in line and password in line:
+                        account = input('Enter account name: ')
+                        self.find_password("pwdmanager.txt", account)
+                        is_finished = True
+                        break
+                    else:
+                        print("The username or password is incorrect. Please try again.")
+                        attempts += 1
+                        break
+               
+        if attempts >= 4:
+            answer = input("Reset your password? Please enter Y (Yes) or N (No): ")
+            if answer == "Y":
+                #g.password_requirements = password.password_requirements
+                self.generate_password() #should generate a new password
+                print("Reset Password Successful.")
+            else:
+                print(f"Sorry, the password is incorrect.")    
     
-    g = Generator()          
-    if attempts >= 4:
-        answer = input("Reset your password? Please enter Y (Yes) or N (No): ")
-        if answer == "Y":
-            #g.password_requirements = password.password_requirements
-            g.generate_password() #should generate a new password
-            print("Reset Password Successful.")
-        else:
-            print(f"Sorry, the password is incorrect. Please try again.")
+    def find_password(self, filename_manager, account):
+        """ Allows user to find their password in their text file when
+            they put in their username.
+        
+        Parameters:
+            filename (str): contains path to a file of accounts that will be read
+        
+        Argument:
+            username (str): username of an account
+        
+        Returns:
+            the password that corresponds with the username that the user
+                inputs
+        """
+        with open(filename_manager, 'r') as f:
+            total_lines = f.readlines()
+            for line in total_lines:
+                account_info = line.split()
+                if account == account_info[0]:
+                    print(f'Username: {account_info[1]} Password: {account_info[2]}')
+                    return f'Username: {account_info[1]} Password: {account_info[2]}'
+        return "Account not found."
+    
+
     
 
 
-def main(suggestion,filename,username):
+def main(suggestion):
     """ Get user's suggestion of what to put in the password, compare the
         suggestion with regularly used passwords and
         either reject it or accept it;
@@ -427,46 +438,40 @@ def main(suggestion,filename,username):
         generated password 
     """
     gen = Generator()
+   
+    print('\n------ PASSWORD GENERATOR ------\n')
     # "password" isn't an acceptable suggestion to be in the pasword. Try "l0ve"
     gen.evaluate_suggestion(suggestion)
     
     print('\n------ PASSWORD MANAGER ------\n')
     gen.password_manager()
+    
+    print('\n------ PASSWORD FINDER ------\n')
     while True:
         see_passwords = input('Do you want to see your other passwords? '
                               'Please enter Y (Yes) or N (No): ')
         if see_passwords == "Y":
-            reset_password(filename)
+            gen.reset_password()
             break
         elif see_passwords == "N":
             break
         else:
             continue
-    
-    print('\n------ PASSWORD FINDER ------\n') 
-    while True:
-        find_passwords = input("Do you want to find your password for a"
-                               "specific account? Please enter Yes or No: ")
-        if find_passwords == "Yes":
-            find_password(filename,username)
-            break
-        else:
-            continue
-        
 
 def parse_args(arglist):
     """ Parse command-line arguments. """
     parser = ArgumentParser(arglist)
     parser.add_argument("suggestion", help="suggestion of a sequence of \
         characters to be used in the password")
-    ####
+    '''####
     parser.add_argument("filename", help="file containing account type, \
         username, and password in each line")
     parser.add_argument("username", help="username that has a password \
         that corresponds with it")
+    ####'''
     return parser.parse_args(arglist)
-    ####
+    
 
 if __name__ == "__main__":
     args = parse_args(sys.argv[1:])
-    main(args.suggestion, args.filename, args.username) 
+    main(args.suggestion) 
