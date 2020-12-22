@@ -356,12 +356,10 @@ class Generator:
                 continue
     
     def reset_password(self):
-        """ Allows user to get access to othe functions of the program and 
+        """ Allows user to get access to other functions of the program and 
             reset existing password if the password 
-            is entered incorrectly more than 5 times in the login page;
+            is entered incorrectly more than 3 times in the login page;
         
-        Parameters:
-            filename (str): contains path to a file of accounts that will be read
         Returns:
             the newly generated password, if the user decides to reset 
                 their password
@@ -371,14 +369,13 @@ class Generator:
             attempts = 1
             is_finished = False
             while attempts < 4 and is_finished == False:
-                #password = input("Enter password: ")
                 username = input("Enter username: ")
                 password = input("Enter password: ")
                 
                 for line in f:
                     if username in line and password in line:
                         account = input('Enter account name: ')
-                        self.find_password("pwdmanager.txt", account)
+                        self.find_account("pwdmanager.txt", account)
                         is_finished = True
                         break
                     else:
@@ -395,19 +392,21 @@ class Generator:
             else:
                 print(f"Sorry, the password is incorrect.")    
     
-    def find_password(self, filename_manager, account):
-        """ Allows user to find their password in their text file when
-            they put in their username.
+    def find_account(self, filename_manager, account):
+        """ Allows user to find their username and password in their text file
+            when they put in their account type.
         
         Parameters:
-            filename (str): contains path to a file of accounts that will be read
+            filename_manager (str): contains path to a file of accounts that 
+                                    will be read
         
         Argument:
-            username (str): username of an account
+            account (str): type of account user is looking for
+                           (i.e. Google, Facebook, Twitter, etc.)
         
         Returns:
-            the password that corresponds with the username that the user
-                inputs
+            the username and password that corresponds with the account 
+            that the user inputs
         """
         with open(filename_manager, 'r') as f:
             total_lines = f.readlines()
