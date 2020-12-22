@@ -57,37 +57,19 @@ def test_get_passwords():
         except:
             pass    
         
-def test_password_manager(capsys):
+def test_password_manager():
     '''Test the password_manager function.'''
     
-    
     with mock.patch("builtins.input",side_effect=['Y','Google','joey@gmail.com']):
-        assert g.password_manager() == "Your password information has been saved in pwdmanager.txt."
-        captured = capsys.readouterr()
-        assert captured.out == ""
+        assert g.password_manager() == ("Your password information has been stored in "
+                          "pwdmanager.txt.")
     with mock.patch("builtins.input",side_effect=['N']):
         assert g.password_manager() == "Your password will not be saved."
-        captured = capsys.readouterr()
-        assert captured.out == ""
-    with mock.patch("builtins.input",side_effect=['U']):
+    with mock.patch("builtins.input",side_effect=['U','Y','Facebook','joey123@gmail.com']):
+        assert g.password_manager() == ("Your password information has been stored in "
+                          "pwdmanager.txt.")
+    with mock.patch("builtins.input",side_effect=['1', 'N']):
         assert g.password_manager() == "Your password will not be saved."
-        captured = capsys.readouterr()
-        assert captured.out == ""
-
-    '''
-    with mock.patch("builtins.input",side_effect=['Y','Google','joey@gmail.com']):
-        g.password_manager()
-        captured = capsys.readouterr()
-        assert captured.out == "Your password information has been saved in pwdmanager.txt.\n"
-    with mock.patch("builtins.input",side_effect=['N']):
-        g.password_manager()
-        captured = capsys.readouterr()
-        assert captured.out == "Your password will not be saved.\n"
-    with mock.patch("builtins.input",side_effect=['U']):
-        g.password_manager()
-        captured = capsys.readouterr()
-        assert captured.out == "Your password will not be saved.\n"
-    '''
 
 def test_find_account():
     """Test the find_account function"""
