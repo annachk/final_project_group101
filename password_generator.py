@@ -376,7 +376,7 @@ def find_password(filename,username):
 def reset_password(filename):
     """ Allows user to get access to othe functions of the program and 
         reset existing password if the password 
-        is entered incorrectly more than 3 times in the login page;
+        is entered incorrectly more than 5 times in the login page;
     
     Parameters:
         filename (str): contains path to a file of accounts that will be read
@@ -386,11 +386,12 @@ def reset_password(filename):
     """
     with open(filename, 'r') as f:
         username = input("Enter username: ")
-        password = input("Enter password: ")
         attempts = 1
         is_finished = False
         while attempts < 4 and is_finished == False:
+            #password = input("Enter password: ")
             for line in f:
+                password = input("Enter password: ")
                 if username in line and password in line:
                     is_finished = True
                 else:
@@ -402,7 +403,7 @@ def reset_password(filename):
     if attempts >= 4:
         answer = input("Reset your password? Please enter Y (Yes) or N (No): ")
         if answer == "Y":
-            g.password_requirements = password.password_requirements
+            #g.password_requirements = password.password_requirements
             g.generate_password() #should generate a new password
             print("Reset Password Successful.")
         else:
@@ -440,7 +441,7 @@ def main(suggestion,filename,username):
             continue
      
     while True:
-        find_passwords = input("Do you want to fin your password for a"
+        find_passwords = input("Do you want to find your password for a"
                                "specific account? Please enter Yes or No: ")
         if find_passwords == "Yes":
             find_password(filename,username)
@@ -454,9 +455,13 @@ def parse_args(arglist):
     parser = ArgumentParser(arglist)
     parser.add_argument("suggestion", help="suggestion of a sequence of \
         characters to be used in the password")
+    parser.add_argument("filename", help="file containing account type, \
+        username, and password in each line")
+    parser.add_argument("username", help="username that has a password \
+        that corresponds with it")
     return parser.parse_args(arglist)
 
 
 if __name__ == "__main__":
     args = parse_args(sys.argv[1:])
-    main(args.suggestion) 
+    main(args.suggestion, args.filename, args.username) 
