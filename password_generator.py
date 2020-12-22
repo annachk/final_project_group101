@@ -246,7 +246,6 @@ class Generator:
         #gives a sequence of random, lower and upper case, letters
         random_let = ''.join([random.choice(alphabet) 
                               for char in range(range_value)])
-        #insert_here = random.randint(1, insert_range)
         let_list = list(random_let)
         for c in pw:
             #adds user's suggestion into the list
@@ -353,12 +352,12 @@ class Generator:
                                     "for the account: ")
                     pwdmanager.write(f"{account} {username} {self.password}\n")
                     pwdmanager.close()
-                    print("Your password information has been stored in "
+                    
+                    return ("Your password information has been stored in "
                           "pwdmanager.txt.")
-                    break
             elif response == "N":
-                print("Your password will not be saved.")
-                break
+                
+                return "Your password will not be saved."
             else:
                 continue
     
@@ -393,7 +392,6 @@ class Generator:
         if attempts >= 4:
             answer = input("Reset your password? Please enter Y (Yes) or N (No): ")
             if answer == "Y":
-                #g.password_requirements = password.password_requirements
                 self.generate_password() #should generate a new password
                 print("Reset Password Successful.")
             else:
@@ -420,7 +418,6 @@ class Generator:
             for line in total_lines:
                 account_info = line.split()
                 if account == account_info[0]:
-                    #print(f'Username: {account_info[1]} Password: {account_info[2]}')
                     return f'Username: {account_info[1]} Password: {account_info[2]}'
         return "Account not found."
     
@@ -450,7 +447,7 @@ def main(suggestion):
     gen.evaluate_suggestion(suggestion)
     
     print('\n------ PASSWORD MANAGER ------\n')
-    gen.password_manager()
+    print(gen.password_manager())
     
     print('\n------ PASSWORD FINDER ------\n')
     while True:
