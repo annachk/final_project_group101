@@ -3,8 +3,6 @@ import pytest
 from pathlib import Path
 import builtins
 from unittest import mock
-#from password_generator import find_password
-from sys import stderr
 
 g = Generator()
 
@@ -61,30 +59,35 @@ def test_password_manager():
     '''Test the password_manager function.'''
     
     with mock.patch("builtins.input",side_effect=['Y','Google','joey@gmail.com']):
-        assert g.password_manager() == ("Your password information has been stored in "
-                          "pwdmanager.txt.")
+        assert g.password_manager() == ("Your password information has been "
+                          "stored in pwdmanager.txt.")
     with mock.patch("builtins.input",side_effect=['N']):
         assert g.password_manager() == "Your password will not be saved."
-    with mock.patch("builtins.input",side_effect=['U','Y','Facebook','joey123@gmail.com']):
-        assert g.password_manager() == ("Your password information has been stored in "
-                          "pwdmanager.txt.")
+    with mock.patch("builtins.input",side_effect=['U','Y','Facebook',
+                                                  'joey123@gmail.com']):
+        assert g.password_manager() == ("Your password information has been "
+                          "stored in pwdmanager.txt.")
     with mock.patch("builtins.input",side_effect=['1', 'N']):
         assert g.password_manager() == "Your password will not be saved."
 
 def test_find_account():
     """Test the find_account function"""
     
-    sample_line = ("Google jess123@gmail.com Snowman1\nFacebook anna123@gmail.com finalprojectyey!")
+    sample_line = ("Google jess123@gmail.com Snowman1\n"
+                   "Facebook anna123@gmail.com finalprojectyey!")
     
     filename_manager = "sample_accounts.txt"
     try:
         with open(filename_manager, "w", encoding="utf-8") as temp_f:
             temp_f.write(sample_line)
         
-        assert g.find_account(filename_manager, "Google") == "Username: jess123@gmail.com Password: Snowman1"
-        assert g.find_account(filename_manager, "Facebook") == "Username: anna123@gmail.com Password: finalprojectyey!"
+        assert g.find_account(filename_manager, "Google") == ("Username: "
+                                        "jess123@gmail.com Password: Snowman1")
+        assert g.find_account(filename_manager, "Facebook") == ("Username: "
+                                "anna123@gmail.com Password: finalprojectyey!")
         assert g.find_account(filename_manager, "goooogle") == "Account not found."
-        assert g.find_account(filename_manager, "jess123@gmail.com") == "Account not found."
+        assert g.find_account(filename_manager, "jess123@gmail.com") == (
+                                                    "Account not found.")
     
     finally:
         try:
