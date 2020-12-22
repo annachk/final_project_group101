@@ -3,7 +3,7 @@ import pytest
 from pathlib import Path
 import builtins
 from unittest import mock
-from password_generator import find_password
+#from password_generator import find_password
 from sys import stderr
 
 g = Generator()
@@ -91,22 +91,20 @@ def test_password_manager(capsys):
 
 def test_find_password():
     """Test the find_password function"""
-    sample_line = ("Google jess123@gmail.com Snowman1")
+    sample_line = ("Google jess123@gmail.com Snowman1\nFacebook anna123@gmail.com finalprojectyey!")
     
-    filename = "sample_accounts.txt"
+    filename_manager = "sample_accounts.txt"
     try:
-        with open(filename, "w", encoding="utf-8") as f:
-            f.write(sample_line)
-        assert find_password(filename,"jess123@gmail.com") == "Snowman1"
-        assert find_password(filename,"jess12@gmail.com") == "Username not found."
-        assert find_password(filename,"jess567@gmail.com") == "Username not found."
-        assert find_password(filename,"jess123") == "Username not found."
-        assert find_password(filename, "1") == "Username not found."
+        with open(filename_manager, "w", encoding="utf-8") as temp_f:
+            temp_f.write(sample_line)
+        
+        assert g.find_password(filename_manager, "Google") == "Username: jess123@gmail.com Password: Snowman1"
+        assert g.find_password(filename_manager, "Facebook") == "Username: anna123@gmail.com Password: finalprojectyey!"
+        assert g.find_password(filename_manager, "goooogle") == "Account not found."
+        assert g.find_password(filename_manager, "jess123@gmail.com") == "Account not found."
     
     finally:
         try:
-            Path(filename).unlink()
+            Path(filename_manager).unlink()
         except:
             pass
-
-    
