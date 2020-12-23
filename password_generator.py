@@ -361,42 +361,39 @@ class Generator:
             else:
                 continue
     
-    def reset_password(self):
-        """ Allows user to get access to other functions of the program and 
-            reset existing password if the password 
-            is entered incorrectly more than 3 times in the login page;
+    def login(self): # former name: reset_password
+        """ Allows user to get access to other accounts' information
+            by loging in (providing/entering) with a username and password
+            that have been created and are saved in the pwdmanager.txt file;
+            If the login and password are entered incorrectly more than 3 times
+            in the login page, then the user's access to the information in the
+            file is denied
         
         Returns:
             the newly generated password, if the user decides to reset 
                 their password
         """
         filename_manager = "pwdmanager.txt"
+        attempts = 0
         with open(filename_manager, 'r') as f:
-            attempts = 1
-            is_finished = False
-            while attempts < 4 and is_finished == False:
+            first_line = f.readline().strip()
+            while True:
                 username = input("Enter username: ")
                 password = input("Enter password: ")
-                
-                for line in f:
-                    if username in line and password in line:
-                        account = input('Enter account name: ')
-                        print(self.find_account("pwdmanager.txt", account))
-                        is_finished = True
+                if username in first_line and password in first_line:
+                    print('Access permitted.\n')
+                    account = input('Enter account name: ')
+                    print(self.find_account("pwdmanager.txt", account))
+                    break
+                else:
+                    print("The username or password is incorrect. Please try again.")
+                    attempts += 1
+                    if attempts == 3:
+                        print(f"Access denied. Too many wrong attempts.")
                         break
                     else:
-                        print("The username or password is incorrect. Please try again.")
-                        attempts += 1
-                        break
+                        continue
                
-        if attempts >= 4:
-            answer = input("Reset your password? Please enter Y (Yes) or N (No): ")
-            if answer == "Y":
-                self.generate_password() #should generate a new password
-                print("Reset Password Successful.")
-            else:
-                print(f"Sorry, the password is incorrect.")    
-    
     def find_account(self, filename_manager, account):
         """ Allows user to find their username and password in their text file
             when they put in their account type.
@@ -421,9 +418,6 @@ class Generator:
                     return f'Username: {account_info[1]} Password: {account_info[2]}'
         return "Account not found."
     
-
-    
-
 
 def main(suggestion):
     """ Get user's suggestion of what to put in the password, compare the
@@ -454,7 +448,7 @@ def main(suggestion):
         see_passwords = input('Do you want to see your other passwords? '
                               'Please enter Y (Yes) or N (No): ')
         if see_passwords == "Y":
-            gen.reset_password()
+            gen.login()
             break
         elif see_passwords == "N":
             break
