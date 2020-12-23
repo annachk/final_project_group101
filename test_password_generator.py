@@ -71,7 +71,10 @@ def test_password_manager():
         assert g.password_manager() == "Your password will not be saved."
 
 def test_find_account():
-    """Test the find_account function"""
+    """Test the find_account function
+    Side effects:
+        Creates and deletes a temporary file
+    """
     
     sample_line = ("Google jess123@gmail.com Snowman1\n"
                    "Facebook anna123@gmail.com finalprojectyey!")
