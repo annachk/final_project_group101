@@ -7,7 +7,6 @@ import string
 import sys
 from argparse import ArgumentParser
 import random
-import string
 
 class Generator:
     """ Get user's suggestion of what to put in the password, 
